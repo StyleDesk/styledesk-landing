@@ -186,6 +186,106 @@ Link in bio. June 2026.
 
 ---
 
+## Production workflow — Tella + Descript
+
+How to make Reels and feature videos look like a marketing team produced them, using only **Tella** (record) and **Descript** (edit). Every Reel in the 30-day calendar should pass through this pipeline.
+
+### Workflow at a glance
+1. Write the script — 4 lines is enough, never go unscripted
+2. **Tella** record with auto-zoom + camera bubble + branded background
+3. **Descript** edit: Studio Sound → remove fillers → shorten gaps → captions → music
+4. Export 1080×1920 MP4 for Reels (or 1080×1350 for feed)
+5. Post with the hook in frame 1 and the founding-100 caption (see template above)
+
+### Tella — recording
+
+**Setup before you record**
+- Record at **1080p or 4K**
+- Capture a **browser tab only**, not the full desktop — keeps the frame focused
+- Close all other tabs, hide bookmarks bar, log out of anything personal
+- Use a USB mic or AirPods — Descript can clean it later, but cleaner in is cleaner out
+
+**Settings to turn ON**
+- **Auto-zoom on clicks** — single biggest "looks pro" trick. Tella zooms into where the cursor clicks.
+- **Smooth cursor** — softens jittery mouse movement
+- **Click highlights** — pulse animation around clicks
+- **Rounded corners + shadow** on the browser frame — Apple-keynote feel
+- **Branded background** — solid color matching the StyleDesk gradient `#3a0018 → #1a000b`. See `DESIGN-SYSTEM.md`.
+
+**Layouts — switch mid-clip (this is what makes a recording feel "produced")**
+- Open with **screen + camera bubble** (bottom-right corner)
+- Switch to **screen only** for detail moments where the UI matters
+- End with **camera only** for the call-to-action
+
+**Per-feature recording recipe (~45–75s)**
+1. **Hook (2s)** — zoomed-in shot of the result (booking confirmed, dashboard count rising)
+2. **Context (5s)** — "When a client texts after hours…"
+3. **Walkthrough (30–45s)** — auto-zoom follows the action, max 3 click moments
+4. **Payoff (5s)** — zoom out to the full dashboard
+
+### Descript — editing
+
+**Order of operations (do these in order — later steps depend on earlier ones)**
+1. **Import** the Tella export → let Descript transcribe
+2. **Studio Sound** (one toggle) — removes room echo, makes voiceover sound like a $2k mic
+3. **Remove Filler Words** — Edit → Remove Filler Words, applied to the whole transcript
+4. **Shorten Word Gaps** to 0.3s — Edit → Shorten Word Gaps. Second-biggest "pro" trick after auto-zoom.
+5. **Captions** — Sequence → Captions → "Big & Bold" or "Wrap"
+6. **B-roll cuts** — drop in 1s screenshots when product names are mentioned
+7. **Music bed** — instrumental, -18 to -24 dB under the voice
+8. **Outro card** — 3s end card with logo + `styledesk.ai`
+9. **Export** 1080p MP4
+
+**Caption style (match the brand — see `DESIGN-SYSTEM.md`)**
+- Font: **Inter**, weight 700–900
+- Color: white text on semi-transparent dark background (matches `#1a000b`)
+- Position: lower third, large enough to read on a phone
+- Animation: word-by-word highlight (keeps eyes on screen)
+- ~80% of feature videos are watched muted — captions are not optional
+
+**Music bed**
+- Descript stock library, instrumental only — vocals fight your voiceover
+- Volume: -18 to -24 dB under the voice
+- Cut on the beat at section transitions (hook → walkthrough → payoff)
+
+**B-roll triggers — when you say one of these words, cut to a 1s screenshot**
+- "Booksy" / "Square" / "Fresha" / "Vagaro" → integration logo
+- "Dashboard" → `images/basic-dashboard.png` / `pro-dashboard.png` / `premium-dashboard.png`
+- "Text" / "SMS" → phone mockup screenshot from the hero section
+- "Call" → phone receiver icon or ringing UI
+
+### Reel hook bank (first 2 seconds — pick one per video)
+Mirrors the Day-by-Day hooks in the 30-day table above. Use these when shooting the corresponding feature day:
+- "Your phone rings at 2am. StyleDesk picked up."
+- "She texted at 11pm. She booked at 11:01."
+- "47 missed calls. 47 booked clients."
+- "Watch what happens when nobody answers your phone."
+- "The text your front desk would have missed."
+
+### Instagram export specs
+- **Reels** — 9:16, 1080×1920, 30 fps, H.264 MP4, 15–90s (sweet spot 30–60s)
+- **Feed video** — 4:5 at 1080×1350 OR 1:1 at 1080×1080, up to 60s
+- **Stories** — 9:16, 1080×1920, 15s per card
+
+**Reel safe zones — don't put text or logos here, Instagram covers them**
+- Top: 220px (handle + sound)
+- Bottom: 400px (caption + buttons)
+- Right: 180px (like / comment / share rail)
+
+Center captions in the middle 60% of the frame.
+
+### Skip these traps
+- Mouse wandering — plan the path before you record
+- Tab loading spinners — pre-load the page, then start recording
+- Default Tella watermark — turn it off in export settings
+- Captions smaller than 32pt
+- Music louder than the voice
+- Dead air over 0.5s anywhere
+- Videos longer than 90s for Reels (algorithm penalty)
+- Auto-generated captions without proofreading — Descript misspells "Booksy" as "Booksey"
+
+---
+
 ## Related files
 
 - `DESIGN-SYSTEM.md` — visual rules for static posts + §11 Shop Talk video overlay
