@@ -108,6 +108,26 @@
       <stop offset="65%" stop-color="#b4833a" stop-opacity="0.15"/>
       <stop offset="100%" stop-color="#b4833a" stop-opacity="0"/>
     </radialGradient>
+
+    <!-- Soft drop shadow under the crown — applied to a black-fill silhouette
+         offset down a few px so the crown lifts off the curtain. -->
+    <filter id="crownDropShadow" x="-25%" y="-25%" width="150%" height="160%">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+
+    <!-- Subtle warm rim light: blur of a thick gold stroke on the crown
+         silhouette, so the edge picks up a soft halo. -->
+    <filter id="crownRimGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3.5"/>
+    </filter>
+
+    <!-- 4-point sparkle glint placed over each jewel: two crossed diamonds
+         (one horizontal, one vertical) for a classic gem-shimmer star. -->
+    <g id="sparkle">
+      <path d="M 0 -22 L 1.8 0 L 0 22 L -1.8 0 Z" fill="#ffffff" opacity="0.88"/>
+      <path d="M -22 0 L 0 1.8 L 22 0 L 0 -1.8 Z" fill="#ffffff" opacity="0.88"/>
+      <circle cx="0" cy="0" r="3" fill="#ffffff" opacity="0.95"/>
+    </g>
     <linearGradient id="pinkBar" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#ffe3ea"/>
       <stop offset="55%" stop-color="#f0c6cf"/>
@@ -347,6 +367,24 @@
   <g id="content" opacity="1">
     <!-- logo crown — scale 1.15 (~252px tall crown), centered at (540, 900) -->
     <g transform="translate(246 633) scale(1.15)">
+      <!-- 1. drop shadow under the crown silhouette (lifts it off the curtain) -->
+      <g transform="translate(3 10)" filter="url(#crownDropShadow)" opacity="0.55">
+        <path d="M143 235 L143 168 L194 204 L256 122 L318 204 L369 168 L369 235 Z" fill="#000000"/>
+        <rect x="143" y="240" width="226" height="30" rx="15" fill="#000000"/>
+        <rect x="164" y="282" width="184" height="26" rx="13" fill="#000000"/>
+        <rect x="184" y="318" width="144" height="23" rx="11.5" fill="#000000"/>
+      </g>
+
+      <!-- 2. warm rim light: thick gold stroke on the crown silhouette, blurred
+           so the edge picks up a soft warm halo. Behind the actual crown body. -->
+      <g filter="url(#crownRimGlow)" opacity="0.7">
+        <path d="M143 235 L143 168 L194 204 L256 122 L318 204 L369 168 L369 235 Z"
+              fill="none" stroke="#f2cc7a" stroke-width="6" stroke-linejoin="round"/>
+        <rect x="143" y="240" width="226" height="30" rx="15"
+              fill="none" stroke="#f2cc7a" stroke-width="5"/>
+      </g>
+
+      <!-- 3. crown body + gloss + bars + jewel glows + jewels + highlights -->
       <path d="M143 235 L143 168 L194 204 L256 122 L318 204 L369 168 L369 235 Z" fill="url(#crown)" stroke="#fadfe4" stroke-width="5" stroke-linejoin="round"/>
       <path d="M143 235 L143 168 L194 204 L256 122 L318 204 L369 168 L369 235 Z" fill="url(#crownGloss)" stroke="none"/>
       <rect x="143" y="240" width="226" height="30" rx="15" fill="url(#pinkBar)"/>
@@ -363,6 +401,12 @@
       <ellipse cx="249" cy="115" rx="6.5" ry="4" fill="#ffffff" opacity="0.7"/>
       <ellipse cx="136" cy="161" rx="6.5" ry="4" fill="#ffffff" opacity="0.7"/>
       <ellipse cx="362" cy="161" rx="6.5" ry="4" fill="#ffffff" opacity="0.7"/>
+
+      <!-- 4. 4-point sparkle glints on each jewel — sits on top so it reads as
+           a bright shimmer/star catching the light. -->
+      <use href="#sparkle" x="256" y="122"/>
+      <use href="#sparkle" x="143" y="168"/>
+      <use href="#sparkle" x="369" y="168"/>
     </g>
 
     <!-- wordmark -->
