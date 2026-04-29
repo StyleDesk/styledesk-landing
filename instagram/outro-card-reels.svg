@@ -109,22 +109,87 @@
     <!-- Valence velvet: brighter than the curtain body so the swag reads as a
          separate, top-lit fabric layer (proscenium light catches it). -->
     <linearGradient id="valenceVelvet" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%"  stop-color="#6e1234"/>
-      <stop offset="55%" stop-color="#4a0820"/>
-      <stop offset="100%" stop-color="#2a0010"/>
+      <stop offset="0%"  stop-color="#7a1640"/>
+      <stop offset="35%" stop-color="#5a0e26"/>
+      <stop offset="75%" stop-color="#3a0018"/>
+      <stop offset="100%" stop-color="#1a000b"/>
     </linearGradient>
 
-    <!-- Tassel template — used at each valence cusp (x=270, 540, 810). -->
+    <!-- Gathered-fabric shadow at each swag cusp (where the cloth is bunched
+         and pinched up). Vertical ellipse, dark center fading out. -->
+    <radialGradient id="cuspShadow" cx="50%" cy="0%" r="80%" fx="50%" fy="0%">
+      <stop offset="0%"  stop-color="#000000" stop-opacity="0.78"/>
+      <stop offset="35%" stop-color="#000000" stop-opacity="0.42"/>
+      <stop offset="70%" stop-color="#000000" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Light catching the lowest hanging fabric at each swag bottom — soft
+         pink-toned highlight so the bottom of each festoon reads as lit. -->
+    <radialGradient id="swagHighlight" cx="50%" cy="100%" r="80%" fx="50%" fy="100%">
+      <stop offset="0%"  stop-color="#a83258" stop-opacity="0.55"/>
+      <stop offset="50%" stop-color="#7c1f36" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#7c1f36" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Heavy darkening just above the scalloped edge: fabric thickness +
+         shadow the swag casts on the curtains behind. -->
+    <radialGradient id="swagBottomShadow" cx="50%" cy="100%" r="55%" fx="50%" fy="100%">
+      <stop offset="0%"  stop-color="#000000" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Cord wrap around the cusp pinch (the rope/cord that ties the fabric
+         up at the tassel). Two-tone braided gold. -->
+    <linearGradient id="goldCord" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#fadfa0"/>
+      <stop offset="50%" stop-color="#a07020"/>
+      <stop offset="100%" stop-color="#5e3e0c"/>
+    </linearGradient>
+
+    <!-- Clip path = exact valence shape, used so the inner detail elements
+         (cusp shadows, swag highlights, gather lines) don't bleed outside. -->
+    <clipPath id="valenceClip">
+      <path d="M 0 0 L 1080 0 L 1080 120
+               Q 945 520 810 120
+               Q 675 520 540 120
+               Q 405 520 270 120
+               Q 135 520 0 120 Z"/>
+    </clipPath>
+
+    <!-- Tassel template — bell-shaped ornament + skirt + heavy fringe + gold
+         cord wrap. Anchored so (0,0) sits at the cusp pinch; the cord hangs
+         downward from there. Used at each visible cusp (x=270, 540, 810). -->
     <g id="tassel">
-      <circle cx="0" cy="0" r="15" fill="url(#goldDot)"/>
-      <ellipse cx="-5" cy="-5" rx="5.5" ry="3.5" fill="#ffffff" opacity="0.55"/>
-      <rect x="-10" y="13" width="20" height="7" rx="2" fill="#7a5519"/>
-      <path d="M -11 20 L 11 20 L 9 64 L -9 64 Z" fill="#c9a064"/>
-      <path d="M -11 20 L 11 20 L 10 32 L -10 32 Z" fill="#fadfa0" opacity="0.35"/>
-      <line x1="-7" y1="62" x2="-7" y2="78" stroke="#7a5519" stroke-width="1.6"/>
-      <line x1="-3" y1="62" x2="-3" y2="80" stroke="#7a5519" stroke-width="1.6"/>
-      <line x1="1"  y1="62" x2="1"  y2="78" stroke="#7a5519" stroke-width="1.6"/>
-      <line x1="5"  y1="62" x2="5"  y2="79" stroke="#7a5519" stroke-width="1.6"/>
+      <!-- cord coming down from the cusp pinch -->
+      <rect x="-3" y="-2" width="6" height="34" fill="url(#goldCord)"/>
+      <!-- knot/cap binding the cord -->
+      <ellipse cx="0" cy="34" rx="14" ry="6" fill="#5e3e0c"/>
+      <ellipse cx="0" cy="32" rx="14" ry="5" fill="url(#goldCord)"/>
+      <!-- bell-shaped ornament -->
+      <ellipse cx="0" cy="56" rx="22" ry="26" fill="url(#goldDot)"/>
+      <ellipse cx="-7" cy="46" rx="8" ry="5" fill="#ffffff" opacity="0.6"/>
+      <ellipse cx="0" cy="80" rx="22" ry="6" fill="#5e3e0c" opacity="0.55"/>
+      <!-- cap binding below the bell -->
+      <rect x="-15" y="82" width="30" height="11" rx="2.5" fill="#5e3e0c"/>
+      <line x1="-15" y1="85" x2="15" y2="85" stroke="#a07020" stroke-width="0.9"/>
+      <line x1="-15" y1="89" x2="15" y2="89" stroke="#a07020" stroke-width="0.9"/>
+      <!-- tassel skirt (slight taper) -->
+      <path d="M -16 93 L 16 93 L 13 158 L -13 158 Z" fill="#c9a064"/>
+      <path d="M -16 93 L 16 93 L 14 110 L -14 110 Z" fill="#fadfa0" opacity="0.45"/>
+      <path d="M -16 93 L -13 158 L -8 156 L -11 93 Z" fill="#5e3e0c" opacity="0.4"/>
+      <!-- fringe strands -->
+      <g stroke="#7a5519" stroke-width="1.8" stroke-linecap="round">
+        <line x1="-12" y1="155" x2="-13" y2="180"/>
+        <line x1="-9"  y1="155" x2="-9"  y2="184"/>
+        <line x1="-6"  y1="155" x2="-6"  y2="178"/>
+        <line x1="-3"  y1="155" x2="-3"  y2="186"/>
+        <line x1="0"   y1="155" x2="0"   y2="180"/>
+        <line x1="3"   y1="155" x2="3"   y2="184"/>
+        <line x1="6"   y1="155" x2="6"   y2="178"/>
+        <line x1="9"   y1="155" x2="10"  y2="186"/>
+        <line x1="12"  y1="155" x2="13"  y2="180"/>
+      </g>
     </g>
 
     <!-- Curtain close clip paths. Default = fully closed (each panel covers its
@@ -166,28 +231,100 @@
   <rect width="1080" height="320" fill="url(#topShadow)"/>
   <rect x="0" y="1600" width="1080" height="320" fill="url(#bottomShadow)"/>
 
-  <!-- Proscenium valence: 4 scalloped velvet swags across the top with gold
-       tassels at the cusps. Sits in front of the curtain panels so they appear
-       to hang from behind it (a real theater proscenium). The swag bottom dips
-       to ~y=200 at each midpoint; cusps land at y=80 and host the tassels. -->
+  <!-- Proscenium valence: 4 deep scalloped velvet swags across the top with
+       gathered-fabric shading and gold tassels at the cusps. Sits in front of
+       the curtain panels so they appear to hang from behind it (a real theater
+       proscenium). Cusps at y=120 host the tassels; swag bottom dips to actual
+       y≈320. Inner shading layers (cusp shadows, swag highlights, gather lines)
+       are clipped to the swag shape so they don't bleed outside. -->
   <g id="valence">
-    <path d="M 0 0 L 1080 0 L 1080 80
-             Q 945 320 810 80
-             Q 675 320 540 80
-             Q 405 320 270 80
-             Q 135 320 0 80 Z"
+    <!-- 1. base velvet body -->
+    <path d="M 0 0 L 1080 0 L 1080 120
+             Q 945 520 810 120
+             Q 675 520 540 120
+             Q 405 520 270 120
+             Q 135 520 0 120 Z"
           fill="url(#valenceVelvet)"/>
-    <!-- thin gold trim along the scalloped edge -->
-    <path d="M 1080 80
-             Q 945 320 810 80
-             Q 675 320 540 80
-             Q 405 320 270 80
-             Q 135 320 0 80"
-          fill="none" stroke="#c9a064" stroke-opacity="0.55" stroke-width="2.2"/>
-    <!-- tassels at the three visible cusps -->
-    <use href="#tassel" x="270" y="80"/>
-    <use href="#tassel" x="540" y="80"/>
-    <use href="#tassel" x="810" y="80"/>
+
+    <!-- 2. inner shading layers, clipped to swag shape -->
+    <g clip-path="url(#valenceClip)">
+      <!-- per-swag highlights: light catches the lowest hanging fabric -->
+      <ellipse cx="135" cy="320" rx="115" ry="95" fill="url(#swagHighlight)"/>
+      <ellipse cx="405" cy="320" rx="115" ry="95" fill="url(#swagHighlight)"/>
+      <ellipse cx="675" cy="320" rx="115" ry="95" fill="url(#swagHighlight)"/>
+      <ellipse cx="945" cy="320" rx="115" ry="95" fill="url(#swagHighlight)"/>
+
+      <!-- per-cusp shadows: gathered/pinched fabric is much darker -->
+      <ellipse cx="0"    cy="120" rx="95" ry="240" fill="url(#cuspShadow)"/>
+      <ellipse cx="270"  cy="120" rx="95" ry="240" fill="url(#cuspShadow)"/>
+      <ellipse cx="540"  cy="120" rx="95" ry="240" fill="url(#cuspShadow)"/>
+      <ellipse cx="810"  cy="120" rx="95" ry="240" fill="url(#cuspShadow)"/>
+      <ellipse cx="1080" cy="120" rx="95" ry="240" fill="url(#cuspShadow)"/>
+
+      <!-- gather lines: thin curved paths radiating from each cusp toward the
+           swag bottom. Two strokes (dark + slight highlight) per line for
+           rounded fabric crease look. -->
+      <g fill="none" stroke-linecap="round" opacity="0.55">
+        <!-- from x=270 cusp -->
+        <path d="M 270 130 Q 230 220 175 320" stroke="#000" stroke-width="3"/>
+        <path d="M 270 130 Q 250 230 205 320" stroke="#000" stroke-width="2.5"/>
+        <path d="M 270 130 Q 310 220 365 320" stroke="#000" stroke-width="3"/>
+        <path d="M 270 130 Q 290 230 335 320" stroke="#000" stroke-width="2.5"/>
+        <!-- from x=540 cusp -->
+        <path d="M 540 130 Q 500 220 445 320" stroke="#000" stroke-width="3"/>
+        <path d="M 540 130 Q 520 230 475 320" stroke="#000" stroke-width="2.5"/>
+        <path d="M 540 130 Q 580 220 635 320" stroke="#000" stroke-width="3"/>
+        <path d="M 540 130 Q 560 230 605 320" stroke="#000" stroke-width="2.5"/>
+        <!-- from x=810 cusp -->
+        <path d="M 810 130 Q 770 220 715 320" stroke="#000" stroke-width="3"/>
+        <path d="M 810 130 Q 790 230 745 320" stroke="#000" stroke-width="2.5"/>
+        <path d="M 810 130 Q 850 220 905 320" stroke="#000" stroke-width="3"/>
+        <path d="M 810 130 Q 830 230 875 320" stroke="#000" stroke-width="2.5"/>
+        <!-- from x=0 / x=1080 edge cusps (only one side visible inside frame) -->
+        <path d="M 0 130 Q 40 220 95 320" stroke="#000" stroke-width="3"/>
+        <path d="M 0 130 Q 20 230 65 320" stroke="#000" stroke-width="2.5"/>
+        <path d="M 1080 130 Q 1040 220 985 320" stroke="#000" stroke-width="3"/>
+        <path d="M 1080 130 Q 1060 230 1015 320" stroke="#000" stroke-width="2.5"/>
+      </g>
+
+      <!-- bottom-edge fabric thickness shadow at each swag bottom -->
+      <ellipse cx="135" cy="335" rx="130" ry="22" fill="url(#swagBottomShadow)"/>
+      <ellipse cx="405" cy="335" rx="130" ry="22" fill="url(#swagBottomShadow)"/>
+      <ellipse cx="675" cy="335" rx="130" ry="22" fill="url(#swagBottomShadow)"/>
+      <ellipse cx="945" cy="335" rx="130" ry="22" fill="url(#swagBottomShadow)"/>
+    </g>
+
+    <!-- 3. two-tone braided gold trim along the scalloped edge: dark base
+         stroke for the cord shadow + bright highlight stroke on top. -->
+    <path d="M 1080 120
+             Q 945 520 810 120
+             Q 675 520 540 120
+             Q 405 520 270 120
+             Q 135 520 0 120"
+          fill="none" stroke="#5e3e0c" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 1080 120
+             Q 945 520 810 120
+             Q 675 520 540 120
+             Q 405 520 270 120
+             Q 135 520 0 120"
+          fill="none" stroke="#c9a064" stroke-width="2.2" stroke-linecap="round" stroke-opacity="0.92"/>
+
+    <!-- 4. cord wrap at each cusp: little bow/tie that the cord makes around
+         the gathered fabric pinch. Drawn before the tassel so the tassel cord
+         appears to descend from underneath. -->
+    <g id="cuspCords">
+      <ellipse cx="270" cy="118" rx="22" ry="9" fill="url(#goldCord)"/>
+      <ellipse cx="270" cy="115" rx="22" ry="3" fill="#fadfa0" opacity="0.7"/>
+      <ellipse cx="540" cy="118" rx="22" ry="9" fill="url(#goldCord)"/>
+      <ellipse cx="540" cy="115" rx="22" ry="3" fill="#fadfa0" opacity="0.7"/>
+      <ellipse cx="810" cy="118" rx="22" ry="9" fill="url(#goldCord)"/>
+      <ellipse cx="810" cy="115" rx="22" ry="3" fill="#fadfa0" opacity="0.7"/>
+    </g>
+
+    <!-- 5. tassels hanging from each cusp pinch -->
+    <use href="#tassel" x="270" y="120"/>
+    <use href="#tassel" x="540" y="120"/>
+    <use href="#tassel" x="810" y="120"/>
   </g>
 
   <!-- stage spotlight glow on curtain behind crown -->
