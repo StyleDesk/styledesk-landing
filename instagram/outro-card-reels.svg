@@ -1,0 +1,178 @@
+<!--
+  StyleDesk Reels Outro Card — 1080×1920 (9:16)
+  3-second end card. Drop into Descript at the end of every Reel.
+
+  Background: hyper-realistic burgundy velvet stage curtains.
+    - velvetBase  : warm-lit top, deep red velvet falling to near-black
+    - pleatLayer  : deep-shadow 3D fold gradient (one pleat unit, 135px wide)
+    - leftCurtain / rightCurtain : two 540px panels, 4 pleats each. Animated
+      to fall down from the top corners via render-animation.js, with a wavy
+      clip-path hem so the cloth reads as drape (not a sliding rectangle).
+    - leftClip / rightClip : per-frame clip paths whose bottom edge is a
+      sinusoidal hem (wavelength = 135px = one pleat unit, so the ripple
+      tracks the pleat geometry).
+    - topShadow   : valence darkening (curtain rod / gathered fabric area)
+    - bottomShadow: floor / hem darkening
+    - crownHalo   : warm spotlight glow on the curtain behind the logo
+
+  This static SVG = the final frame (curtains fully fallen, all content visible).
+  For the animated MP4/GIF, see render-animation.js — it parameterizes the
+  clip-path d values + content opacity to build a frame sequence.
+
+  Reels safe zones: top 220px, bottom 400px, right 180px.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" role="img" aria-label="StyleDesk.ai outro on velvet curtain backdrop">
+  <defs>
+    <!-- velvet base: rich red velvet, warmer/lit at top, deep at bottom -->
+    <linearGradient id="velvetBase" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5a0e26"/>
+      <stop offset="30%" stop-color="#4a0820"/>
+      <stop offset="65%" stop-color="#330014"/>
+      <stop offset="100%" stop-color="#15000a"/>
+    </linearGradient>
+
+    <!-- pleat fold (deep shadows): dark crease | shadow | mid | highlight | mid | shadow | dark crease -->
+    <linearGradient id="pleatLayer" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#000000" stop-opacity="0.92"/>
+      <stop offset="3%"   stop-color="#000000" stop-opacity="0.78"/>
+      <stop offset="10%"  stop-color="#000000" stop-opacity="0.50"/>
+      <stop offset="22%"  stop-color="#000000" stop-opacity="0.22"/>
+      <stop offset="38%"  stop-color="#ffffff" stop-opacity="0.04"/>
+      <stop offset="50%"  stop-color="#ffffff" stop-opacity="0.16"/>
+      <stop offset="62%"  stop-color="#ffffff" stop-opacity="0.04"/>
+      <stop offset="78%"  stop-color="#000000" stop-opacity="0.22"/>
+      <stop offset="90%"  stop-color="#000000" stop-opacity="0.50"/>
+      <stop offset="97%"  stop-color="#000000" stop-opacity="0.78"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.92"/>
+    </linearGradient>
+
+    <!-- top valence shadow: darken top (curtain rod / gathered fabric) -->
+    <linearGradient id="topShadow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#000000" stop-opacity="0.55"/>
+      <stop offset="60%"  stop-color="#000000" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- bottom floor shadow: curtain meets the floor / heavier hem -->
+    <linearGradient id="bottomShadow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#000000" stop-opacity="0"/>
+      <stop offset="40%"  stop-color="#000000" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.60"/>
+    </linearGradient>
+
+    <!-- gold gradient for headline emphasis -->
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f0c6cf"/>
+      <stop offset="50%" stop-color="#c9a064"/>
+      <stop offset="100%" stop-color="#f0c6cf"/>
+    </linearGradient>
+
+    <!-- crown halo: warm stage spotlight on curtain behind the logo -->
+    <radialGradient id="crownHalo" cx="50%" cy="47%" r="34%">
+      <stop offset="0%" stop-color="#c9a064" stop-opacity="0.30"/>
+      <stop offset="50%" stop-color="#7c1f36" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#c9a064" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- crown logo gradients (mirror styledesk-logo-square.svg) -->
+    <linearGradient id="crown" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#932748"/>
+      <stop offset="100%" stop-color="#551024"/>
+    </linearGradient>
+    <linearGradient id="crownGloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="48%" stop-color="#ffffff" stop-opacity="0.08"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="goldDot" cx="28%" cy="22%" r="95%">
+      <stop offset="0%" stop-color="#fff0b8"/>
+      <stop offset="25%" stop-color="#f2cc7a"/>
+      <stop offset="70%" stop-color="#b4833a"/>
+      <stop offset="100%" stop-color="#5e3e0c"/>
+    </radialGradient>
+    <linearGradient id="pinkBar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffe3ea"/>
+      <stop offset="55%" stop-color="#f0c6cf"/>
+      <stop offset="100%" stop-color="#c1909b"/>
+    </linearGradient>
+    <linearGradient id="pinkGloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Curtain drop clip paths. Default = fully fallen (covers the whole panel)
+         so the static SVG renders the final frame unchanged. render-animation.js
+         rewrites each path's d attribute per frame to drop a wavy hem from the
+         top of the canvas downward. -->
+    <clipPath id="leftClip">
+      <path id="leftClipPath" d="M 0 0 L 540 0 L 540 1920 L 0 1920 Z"/>
+    </clipPath>
+    <clipPath id="rightClip">
+      <path id="rightClipPath" d="M 540 0 L 1080 0 L 1080 1920 L 540 1920 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- backstage base (visible when curtains are open) -->
+  <rect width="1080" height="1920" fill="url(#velvetBase)"/>
+
+  <!-- LEFT curtain panel: 540px wide, 4 pleats × 135px. Anchored at the top-left
+       corner; falls down from above with a wavy clip-path hem (see leftClip). -->
+  <g id="leftCurtain" clip-path="url(#leftClip)">
+    <rect x="0"   y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
+    <rect x="135" y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
+    <rect x="270" y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
+    <rect x="405" y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
+    <!-- velvet body color (multiplies with pleat shadows) -->
+    <rect x="0" y="0" width="540" height="1920" fill="url(#velvetBase)" opacity="0.55"/>
+  </g>
+
+  <!-- RIGHT curtain panel: mirror of left, anchored at the top-right corner. -->
+  <g id="rightCurtain" clip-path="url(#rightClip)">
+    <rect x="540" y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
+    <rect x="675" y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
+    <rect x="810" y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
+    <rect x="945" y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
+    <rect x="540" y="0" width="540" height="1920" fill="url(#velvetBase)" opacity="0.55"/>
+  </g>
+
+  <!-- top valence + floor shadow (only show when curtains are closed enough to see them) -->
+  <rect width="1080" height="320" fill="url(#topShadow)"/>
+  <rect x="0" y="1600" width="1080" height="320" fill="url(#bottomShadow)"/>
+
+  <!-- stage spotlight glow on curtain behind crown -->
+  <rect width="1080" height="1920" fill="url(#crownHalo)"/>
+
+  <!-- content (crown + wordmark + divider + CTA + footer). Wrapped in a group so render
+       script can fade it in by setting g opacity. -->
+  <g id="content" opacity="1">
+    <!-- logo crown — scale 1.15 (~252px tall crown), centered at (540, 900) -->
+    <g transform="translate(246 633) scale(1.15)">
+      <path d="M143 235 L143 168 L194 204 L256 122 L318 204 L369 168 L369 235 Z" fill="url(#crown)" stroke="#fadfe4" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M143 235 L143 168 L194 204 L256 122 L318 204 L369 168 L369 235 Z" fill="url(#crownGloss)" stroke="none"/>
+      <rect x="143" y="240" width="226" height="30" rx="15" fill="url(#pinkBar)"/>
+      <rect x="147" y="242" width="218" height="13" rx="6.5" fill="url(#pinkGloss)"/>
+      <rect x="164" y="282" width="184" height="26" rx="13" fill="#9a7a80" opacity="0.92"/>
+      <rect x="184" y="318" width="144" height="23" rx="11.5" fill="#7a5a60" opacity="0.78"/>
+      <circle cx="256" cy="122" r="18" fill="url(#goldDot)"/>
+      <circle cx="143" cy="168" r="18" fill="url(#goldDot)"/>
+      <circle cx="369" cy="168" r="18" fill="url(#goldDot)"/>
+      <ellipse cx="249" cy="115" rx="6.5" ry="4" fill="#ffffff" opacity="0.7"/>
+      <ellipse cx="136" cy="161" rx="6.5" ry="4" fill="#ffffff" opacity="0.7"/>
+      <ellipse cx="362" cy="161" rx="6.5" ry="4" fill="#ffffff" opacity="0.7"/>
+    </g>
+
+    <!-- wordmark -->
+    <text x="540" y="1210" font-family="'Playfair Display', Georgia, serif" font-size="120" font-weight="700" text-anchor="middle" letter-spacing="-2" fill="url(#gold)">STYLEDESK.AI</text>
+
+    <!-- refined divider -->
+    <line x1="380" y1="1320" x2="525" y2="1320" stroke="#c9a064" stroke-opacity="0.40" stroke-width="0.8"/>
+    <rect x="535" y="1315" width="10" height="10" transform="rotate(45 540 1320)" fill="#c9a064" fill-opacity="0.90"/>
+    <line x1="555" y1="1320" x2="700" y2="1320" stroke="#c9a064" stroke-opacity="0.40" stroke-width="0.8"/>
+
+    <!-- CTA -->
+    <text x="540" y="1430" font-family="'Helvetica Neue', 'Inter', -apple-system, sans-serif" font-size="26" font-weight="300" fill="#c9a064" text-anchor="middle" letter-spacing="8">BOOK A DEMO  ·  LINK IN BIO</text>
+
+    <!-- heritage footer -->
+    <text x="540" y="1485" font-family="'Helvetica Neue', 'Inter', -apple-system, sans-serif" font-size="18" font-weight="300" fill="#c9a064" fill-opacity="0.5" text-anchor="middle" letter-spacing="6">EST. MMXXVI</text>
+  </g>
+</svg>
