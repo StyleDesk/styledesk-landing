@@ -2,33 +2,82 @@
   StyleDesk Reels Outro Card — 1080×1920 (9:16)
   3-second end card. Drop into Descript at the end of every Reel.
 
+  Background: hyper-realistic burgundy velvet stage curtains.
+    - velvetBase  : warm-lit top, deep red velvet falling to near-black
+    - curtainPleats: vertical 80px pleat pattern (dark crease → mid → highlight → mid → dark crease)
+    - topShadow   : valence darkening (curtain rod / gathered fabric area)
+    - bottomShadow: floor / hem darkening
+    - crownHalo   : warm spotlight glow on the curtain behind the logo
+
   Reels safe zones (Instagram covers these with UI):
     Top 220px, Bottom 400px, Right 180px
   Critical content lives in y: 220–1520, x: ~80–900.
-
-  See DESIGN-SYSTEM.md for the full spec.
 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" role="img" aria-label="StyleDesk.ai outro — link in bio, June 2026">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" role="img" aria-label="StyleDesk.ai outro on velvet curtain backdrop">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#3a0018"/>
-      <stop offset="55%" stop-color="#2a0012"/>
-      <stop offset="100%" stop-color="#1a000b"/>
+    <!-- velvet base: rich red velvet, warmer/lit at top, deep at bottom -->
+    <linearGradient id="velvetBase" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5a0e26"/>
+      <stop offset="30%" stop-color="#4a0820"/>
+      <stop offset="65%" stop-color="#330014"/>
+      <stop offset="100%" stop-color="#15000a"/>
     </linearGradient>
+
+    <!-- pleat fold: dark crease | shadow | mid | highlight | mid | shadow | dark crease -->
+    <linearGradient id="pleatLayer" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#000000" stop-opacity="0.78"/>
+      <stop offset="3%"   stop-color="#000000" stop-opacity="0.58"/>
+      <stop offset="10%"  stop-color="#000000" stop-opacity="0.32"/>
+      <stop offset="22%"  stop-color="#000000" stop-opacity="0.12"/>
+      <stop offset="38%"  stop-color="#ffffff" stop-opacity="0.04"/>
+      <stop offset="50%"  stop-color="#ffffff" stop-opacity="0.14"/>
+      <stop offset="62%"  stop-color="#ffffff" stop-opacity="0.04"/>
+      <stop offset="78%"  stop-color="#000000" stop-opacity="0.12"/>
+      <stop offset="90%"  stop-color="#000000" stop-opacity="0.32"/>
+      <stop offset="97%"  stop-color="#000000" stop-opacity="0.58"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.78"/>
+    </linearGradient>
+
+    <!-- curtain pleats pattern: 80px per fold, repeats horizontally -->
+    <pattern id="curtainPleats" x="0" y="0" width="80" height="1920" patternUnits="userSpaceOnUse">
+      <rect width="80" height="1920" fill="url(#pleatLayer)"/>
+    </pattern>
+
+    <!-- subtle wider drape: 320px overlay creates softer macro-folds across the pleats -->
+    <linearGradient id="drapeLayer" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#000000" stop-opacity="0.18"/>
+      <stop offset="50%"  stop-color="#ffffff" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.18"/>
+    </linearGradient>
+    <pattern id="curtainDrape" x="0" y="0" width="320" height="1920" patternUnits="userSpaceOnUse">
+      <rect width="320" height="1920" fill="url(#drapeLayer)"/>
+    </pattern>
+
+    <!-- top valence shadow: darken top (curtain rod / gathered fabric) -->
+    <linearGradient id="topShadow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#000000" stop-opacity="0.55"/>
+      <stop offset="60%"  stop-color="#000000" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- bottom floor shadow: curtain meets the floor / heavier hem -->
+    <linearGradient id="bottomShadow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#000000" stop-opacity="0"/>
+      <stop offset="40%"  stop-color="#000000" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.60"/>
+    </linearGradient>
+
+    <!-- gold gradient for headline emphasis -->
     <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#f0c6cf"/>
       <stop offset="50%" stop-color="#c9a064"/>
       <stop offset="100%" stop-color="#f0c6cf"/>
     </linearGradient>
-    <!-- ambient: faint top wash (atmospheric, behind everything) -->
-    <radialGradient id="ambient" cx="50%" cy="28%" r="75%">
-      <stop offset="0%" stop-color="#c9a064" stop-opacity="0.10"/>
-      <stop offset="100%" stop-color="#c9a064" stop-opacity="0"/>
-    </radialGradient>
-    <!-- crown halo: focused glow centered behind the logo (cy~47% = y=900) -->
-    <radialGradient id="crownHalo" cx="50%" cy="47%" r="32%">
-      <stop offset="0%" stop-color="#c9a064" stop-opacity="0.22"/>
-      <stop offset="50%" stop-color="#7c1f36" stop-opacity="0.10"/>
+
+    <!-- crown halo: warm stage spotlight on curtain behind the logo -->
+    <radialGradient id="crownHalo" cx="50%" cy="47%" r="34%">
+      <stop offset="0%" stop-color="#c9a064" stop-opacity="0.28"/>
+      <stop offset="50%" stop-color="#7c1f36" stop-opacity="0.12"/>
       <stop offset="100%" stop-color="#c9a064" stop-opacity="0"/>
     </radialGradient>
 
@@ -59,13 +108,15 @@
     </linearGradient>
   </defs>
 
-  <!-- background layers — DO NOT EDIT -->
-  <rect width="1080" height="1920" fill="url(#bg)"/>
-  <rect width="1080" height="1920" fill="url(#ambient)"/>
-  <rect width="1080" height="1920" fill="url(#crownHalo)"/>
+  <!-- velvet curtain backdrop: base color, fine pleats, softer macro-folds, top + floor shadows -->
+  <rect width="1080" height="1920" fill="url(#velvetBase)"/>
+  <rect width="1080" height="1920" fill="url(#curtainPleats)"/>
+  <rect width="1080" height="1920" fill="url(#curtainDrape)"/>
+  <rect width="1080" height="320" fill="url(#topShadow)"/>
+  <rect x="0" y="1600" width="1080" height="320" fill="url(#bottomShadow)"/>
 
-  <!-- hairline gold inset border — lives inside the Reels safe zone so IG UI never clips it -->
-  <rect x="80" y="240" width="920" height="1260" fill="none" stroke="#c9a064" stroke-opacity="0.18" stroke-width="1"/>
+  <!-- stage spotlight glow on curtain behind crown -->
+  <rect width="1080" height="1920" fill="url(#crownHalo)"/>
 
   <!-- logo crown — scale 1.15 (~252px tall crown), centered at (540, 900) -->
   <g transform="translate(246 633) scale(1.15)">
