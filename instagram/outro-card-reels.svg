@@ -99,6 +99,15 @@
       <stop offset="70%" stop-color="#b4833a"/>
       <stop offset="100%" stop-color="#5e3e0c"/>
     </radialGradient>
+
+    <!-- Soft gold glow halo placed behind each crown jewel — makes the three
+         gold dots read as lit gems, not flat circles. -->
+    <radialGradient id="jewelGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#fff0b8" stop-opacity="0.85"/>
+      <stop offset="30%" stop-color="#f2cc7a" stop-opacity="0.45"/>
+      <stop offset="65%" stop-color="#b4833a" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#b4833a" stop-opacity="0"/>
+    </radialGradient>
     <linearGradient id="pinkBar" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#ffe3ea"/>
       <stop offset="55%" stop-color="#f0c6cf"/>
@@ -344,6 +353,10 @@
       <rect x="147" y="242" width="218" height="13" rx="6.5" fill="url(#pinkGloss)"/>
       <rect x="164" y="282" width="184" height="26" rx="13" fill="#9a7a80" opacity="0.92"/>
       <rect x="184" y="318" width="144" height="23" rx="11.5" fill="#7a5a60" opacity="0.78"/>
+      <!-- jewel glow halos (sit behind each gold dot for a lit-gem effect) -->
+      <circle cx="256" cy="122" r="52" fill="url(#jewelGlow)"/>
+      <circle cx="143" cy="168" r="52" fill="url(#jewelGlow)"/>
+      <circle cx="369" cy="168" r="52" fill="url(#jewelGlow)"/>
       <circle cx="256" cy="122" r="18" fill="url(#goldDot)"/>
       <circle cx="143" cy="168" r="18" fill="url(#goldDot)"/>
       <circle cx="369" cy="168" r="18" fill="url(#goldDot)"/>
