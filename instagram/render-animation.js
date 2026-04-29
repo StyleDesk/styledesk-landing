@@ -2,19 +2,29 @@
 //
 // Usage:
 //   node render-animation.js               # 1080×1920 H.264 MP4 for Descript
+//   node render-animation.js --alpha       # 1080×1920 VP9 WebM with alpha,
+//                                          # for layering as an overlay over
+//                                          # dashboard footage in Descript
 //
 // Pipeline: parameterize the outro SVG (clipPath inner edge + content opacity),
-// render N frames via sharp, then ffmpeg into MP4. Each curtain panel slides
-// in horizontally from its outer edge toward the center stage line (x=540)
-// with a straight vertical leading edge — the pleat geometry sells the cloth,
-// no wavy hem needed (a wavy hem zigzags as the two panels meet). The right
-// panel starts RIGHT_DELAY seconds after the left for an organic,
-// non-synchronized feel.
+// render N frames via sharp, then ffmpeg into MP4 (or WebM in alpha mode).
+// Each curtain panel slides in horizontally from its outer edge toward the
+// center stage line (x=540) with a straight vertical leading edge — the pleat
+// geometry sells the cloth, no wavy hem needed (a wavy hem zigzags as the two
+// panels meet). The right panel starts RIGHT_DELAY seconds after the left for
+// an organic, non-synchronized feel.
+//
+// Alpha mode strips the elements that depend on an opaque backstage (velvet
+// base rect, top + bottom shadow gradients, crown halo) so the un-curtained
+// region renders transparent; the dashboard underneath shows through and gets
+// progressively covered as the curtains slide in.
 
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 const sharp = require('/tmp/node_modules/sharp');
+
+const wantAlpha = process.argv.includes('--alpha');
 
 const FPS = 30;
 const ANIM_DUR = 1.6;            // curtains closing — 1.6s per panel
@@ -29,6 +39,7 @@ const FULL_H = 1920;
 
 const OUT_DIR = path.join(__dirname, 'png-ready', '_frames');
 const MP4_OUT = path.join(__dirname, 'png-ready', 'outro-card-reels.mp4');
+const WEBM_OUT = path.join(__dirname, 'png-ready', 'outro-card-reels.webm');
 const SVG_PATH = path.join(__dirname, 'outro-card-reels.svg');
 
 // Quadratic-ish ease-out: starts moving immediately, settles into place at the
@@ -66,6 +77,16 @@ function svgForFrame(t) {
                     `<path id="rightClipPath" d="${clipPathD(t, 'right')}"/>`);
   svg = svg.replace('<g id="content" opacity="1">',
                     `<g id="content" opacity="${opacity.toFixed(3)}">`);
+
+  if (wantAlpha) {
+    // Strip elements that depend on an opaque backstage so the un-curtained
+    // region is transparent (dashboard footage shows through underneath).
+    svg = svg.replace(/<rect width="1080" height="1920" fill="url\(#velvetBase\)"\/>/, '');
+    svg = svg.replace(/<rect width="1080" height="320" fill="url\(#topShadow\)"\/>/, '');
+    svg = svg.replace(/<rect x="0" y="1600" width="1080" height="320" fill="url\(#bottomShadow\)"\/>/, '');
+    svg = svg.replace(/<rect width="1080" height="1920" fill="url\(#crownHalo\)"\/>/, '');
+  }
+
   return svg;
 }
 
@@ -93,11 +114,26 @@ async function main() {
   }
   console.log(`  ${TOTAL_FRAMES}/${TOTAL_FRAMES} done.`);
 
-  console.log('Encoding MP4 (H.264, yuv420p, faststart)…');
-  execSync(`ffmpeg -y -framerate ${FPS} -i ${OUT_DIR}/f%04d.png ` +
-           `-c:v libx264 -pix_fmt yuv420p -movflags +faststart -crf 18 ${MP4_OUT}`,
-           { stdio: 'inherit' });
-  console.log(`MP4: ${MP4_OUT}`);
+  if (wantAlpha) {
+    // VP9 + alpha. WebM stores alpha as a sidecar VP9 stream signaled by the
+    // Matroska ALPHA_MODE=1 tag — without that metadata flag, decoders won't
+    // know to composite the alpha channel even though it's encoded. -auto-alt-ref 0
+    // is required for alpha encoding. CRF 28 keeps the file small (~MB-range).
+    console.log('Encoding WebM (VP9 + alpha, yuva420p)…');
+    execSync(`ffmpeg -y -framerate ${FPS} -i ${OUT_DIR}/f%04d.png ` +
+             `-c:v libvpx-vp9 -pix_fmt yuva420p ` +
+             `-metadata:s:v:0 alpha_mode=1 ` +
+             `-auto-alt-ref 0 -lag-in-frames 0 ` +
+             `-b:v 0 -crf 28 -row-mt 1 ${WEBM_OUT}`,
+             { stdio: 'inherit' });
+    console.log(`WebM (alpha): ${WEBM_OUT}`);
+  } else {
+    console.log('Encoding MP4 (H.264, yuv420p, faststart)…');
+    execSync(`ffmpeg -y -framerate ${FPS} -i ${OUT_DIR}/f%04d.png ` +
+             `-c:v libx264 -pix_fmt yuv420p -movflags +faststart -crf 18 ${MP4_OUT}`,
+             { stdio: 'inherit' });
+    console.log(`MP4: ${MP4_OUT}`);
+  }
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
