@@ -73,10 +73,13 @@
       <stop offset="100%" stop-color="#f0c6cf"/>
     </linearGradient>
 
-    <!-- crown halo: warm stage spotlight on curtain behind the logo -->
-    <radialGradient id="crownHalo" cx="50%" cy="47%" r="34%">
-      <stop offset="0%" stop-color="#c9a064" stop-opacity="0.30"/>
-      <stop offset="50%" stop-color="#7c1f36" stop-opacity="0.14"/>
+    <!-- crown halo: warm stage spotlight on curtain behind the logo. Tight
+         radius + aggressive falloff so the glow doesn't bleed onto the
+         STYLEDESK.AI wordmark below at y=1210. -->
+    <radialGradient id="crownHalo" cx="50%" cy="43%" r="22%">
+      <stop offset="0%"  stop-color="#c9a064" stop-opacity="0.32"/>
+      <stop offset="35%" stop-color="#7c1f36" stop-opacity="0.14"/>
+      <stop offset="80%" stop-color="#7c1f36" stop-opacity="0"/>
       <stop offset="100%" stop-color="#c9a064" stop-opacity="0"/>
     </radialGradient>
 
