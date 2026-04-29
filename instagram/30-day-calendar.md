@@ -236,12 +236,29 @@ How to make Reels and feature videos look like a marketing team produced them, u
 8. **Outro card** — 3s end card with logo + `styledesk.ai`
 9. **Export** 1080p MP4
 
-**Caption style (match the brand — see `DESIGN-SYSTEM.md`)**
+**Caption style — full transcript with bold emphasis (the hybrid that wins)**
+
+Caption every word — but style the punchline word so the eye locks on it. Full captions keep the muted viewer (80%+ of Reels are watched muted), and emphasis makes captions feel *designed* instead of transcribed. Skipping words to "highlight only key sentences" loses the muted viewer on info-dense content like ours — every word in our hooks does work.
+
+Base style (match the brand — see `DESIGN-SYSTEM.md`):
 - Font: **Inter**, weight 700–900
 - Color: white text on semi-transparent dark background (matches `#1a000b`)
 - Position: lower third, large enough to read on a phone
-- Animation: word-by-word highlight (keeps eyes on screen)
-- ~80% of feature videos are watched muted — captions are not optional
+- Animation: word-by-word reveal — current word highlighted as it's spoken
+
+Emphasis layer — make these words bigger + bold + brand gold:
+- The **last word** of each sentence (the punchline)
+- **Numbers**: `$6,000`, `47`, `11:01`, `24/7`
+- **Identity words**: *your*, *you*, *us*
+- **The verb that does the work**: *booked*, *missed*, *slept*
+
+Example — *"She texted at 11pm. She booked at 11:01."* → caption every word, but only `11:01` gets the bold + gold + scale-pop treatment.
+
+How to apply in Descript:
+1. **Captions → "Big & Bold" preset** (auto-generates full transcript with word-by-word reveal)
+2. Select the punchline word(s) in the caption track
+3. **Size +20%, color to brand gold `#c9a064`, weight 900**
+4. Optional pop animation on the emphasized word: Effects → Scale 1.0 → 1.15 → 1.0 over 0.2s
 
 **Music bed**
 - Descript stock library, instrumental only — vocals fight your voiceover
