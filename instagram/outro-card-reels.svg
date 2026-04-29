@@ -120,14 +120,6 @@
     <filter id="crownRimGlow" x="-30%" y="-30%" width="160%" height="160%">
       <feGaussianBlur stdDeviation="3.5"/>
     </filter>
-
-    <!-- 4-point sparkle glint placed over each jewel: two crossed diamonds
-         (one horizontal, one vertical) for a classic gem-shimmer star. -->
-    <g id="sparkle">
-      <path d="M 0 -22 L 1.8 0 L 0 22 L -1.8 0 Z" fill="#ffffff" opacity="0.88"/>
-      <path d="M -22 0 L 0 1.8 L 22 0 L 0 -1.8 Z" fill="#ffffff" opacity="0.88"/>
-      <circle cx="0" cy="0" r="3" fill="#ffffff" opacity="0.95"/>
-    </g>
     <linearGradient id="pinkBar" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#ffe3ea"/>
       <stop offset="55%" stop-color="#f0c6cf"/>
@@ -401,15 +393,12 @@
       <ellipse cx="249" cy="115" rx="6.5" ry="4" fill="#ffffff" opacity="0.7"/>
       <ellipse cx="136" cy="161" rx="6.5" ry="4" fill="#ffffff" opacity="0.7"/>
       <ellipse cx="362" cy="161" rx="6.5" ry="4" fill="#ffffff" opacity="0.7"/>
-
-      <!-- 4. 4-point sparkle glints on each jewel — sits on top so it reads as
-           a bright shimmer/star catching the light. -->
-      <use href="#sparkle" x="256" y="122"/>
-      <use href="#sparkle" x="143" y="168"/>
-      <use href="#sparkle" x="369" y="168"/>
     </g>
 
-    <!-- wordmark -->
+    <!-- wordmark — drop shadow first so it sits behind the gold text -->
+    <g transform="translate(3 10)" filter="url(#crownDropShadow)" opacity="0.55">
+      <text x="540" y="1210" font-family="'Playfair Display', Georgia, serif" font-size="96" font-weight="700" text-anchor="middle" letter-spacing="-2" fill="#000000">STYLEDESK.AI</text>
+    </g>
     <text x="540" y="1210" font-family="'Playfair Display', Georgia, serif" font-size="96" font-weight="700" text-anchor="middle" letter-spacing="-2" fill="url(#gold)">STYLEDESK.AI</text>
 
     <!-- refined divider -->
