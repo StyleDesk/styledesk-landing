@@ -1,15 +1,14 @@
 // Renders the StyleDesk outro card as a Muppet-Show-style curtain close.
 //
 // Usage:
-//   node render-animation.js               # GIF (1080×1920, 30fps)
-//   node render-animation.js --mp4         # also generates 1080×1920 MP4 for Descript
+//   node render-animation.js               # 1080×1920 H.264 MP4 for Descript
 //
 // Pipeline: parameterize the outro SVG (clipPath inner edge + content opacity),
-// render N frames via sharp, then ffmpeg into GIF / MP4. Each curtain panel
-// slides in horizontally from its outer edge toward the center stage line
-// (x=540) with a straight vertical leading edge — the pleat geometry sells the
-// cloth, no wavy hem needed (a wavy hem zigzags as the two panels meet). The
-// right panel starts RIGHT_DELAY seconds after the left for an organic,
+// render N frames via sharp, then ffmpeg into MP4. Each curtain panel slides
+// in horizontally from its outer edge toward the center stage line (x=540)
+// with a straight vertical leading edge — the pleat geometry sells the cloth,
+// no wavy hem needed (a wavy hem zigzags as the two panels meet). The right
+// panel starts RIGHT_DELAY seconds after the left for an organic,
 // non-synchronized feel.
 
 const fs = require('fs');
@@ -24,14 +23,11 @@ const FADE_DUR = 0.25;           // content fade in (snappy)
 const HOLD_DUR = 1.5;            // final hold — give viewers time to read
 const TOTAL_FRAMES = Math.round((ANIM_DUR + RIGHT_DELAY + FADE_DUR + HOLD_DUR) * FPS);
 
-// Render the GIF at full Reels resolution (1080×1920) so Instagram doesn't
-// upscale and blur the wordmark. Bigger file but text + gold gradient stay
-// crisp. The optional MP4 uses the same frames.
+// Full Reels resolution.
 const FULL_W = 1080;
 const FULL_H = 1920;
 
 const OUT_DIR = path.join(__dirname, 'png-ready', '_frames');
-const GIF_OUT = path.join(__dirname, 'png-ready', 'outro-card-reels.gif');
 const MP4_OUT = path.join(__dirname, 'png-ready', 'outro-card-reels.mp4');
 const SVG_PATH = path.join(__dirname, 'outro-card-reels.svg');
 
@@ -84,8 +80,6 @@ async function renderFrame(i, width, height) {
 }
 
 async function main() {
-  const wantMp4 = process.argv.includes('--mp4');
-
   if (fs.existsSync(OUT_DIR)) {
     for (const f of fs.readdirSync(OUT_DIR)) fs.unlinkSync(path.join(OUT_DIR, f));
   } else {
@@ -99,28 +93,11 @@ async function main() {
   }
   console.log(`  ${TOTAL_FRAMES}/${TOTAL_FRAMES} done.`);
 
-  // stats_mode=full weights every pixel of every frame (so the wordmark, which
-  // only exists in the held final frames, gets full palette weight). Sierra
-  // 2-4a dithering keeps the gold-gradient text + smooth velvet gradient clean
-  // — bayer dither produces visible cross-hatch on both.
-  const palette = path.join(OUT_DIR, '_palette.png');
-  console.log('Building palette…');
+  console.log('Encoding MP4 (H.264, yuv420p, faststart)…');
   execSync(`ffmpeg -y -framerate ${FPS} -i ${OUT_DIR}/f%04d.png ` +
-           `-vf "palettegen=stats_mode=full:max_colors=256" ${palette}`,
+           `-c:v libx264 -pix_fmt yuv420p -movflags +faststart -crf 18 ${MP4_OUT}`,
            { stdio: 'inherit' });
-  console.log('Encoding GIF…');
-  execSync(`ffmpeg -y -framerate ${FPS} -i ${OUT_DIR}/f%04d.png -i ${palette} ` +
-           `-lavfi "paletteuse=dither=sierra2_4a:diff_mode=rectangle" ${GIF_OUT}`,
-           { stdio: 'inherit' });
-  console.log(`GIF: ${GIF_OUT}`);
-
-  if (wantMp4) {
-    console.log('Encoding MP4 (H.264, yuv420p, faststart)…');
-    execSync(`ffmpeg -y -framerate ${FPS} -i ${OUT_DIR}/f%04d.png ` +
-             `-c:v libx264 -pix_fmt yuv420p -movflags +faststart -crf 18 ${MP4_OUT}`,
-             { stdio: 'inherit' });
-    console.log(`MP4: ${MP4_OUT}`);
-  }
+  console.log(`MP4: ${MP4_OUT}`);
 }
 
 main().catch(e => { console.error(e); process.exit(1); });

@@ -20,7 +20,7 @@
     - crownHalo   : warm spotlight glow on the curtain behind the logo
 
   This static SVG = the final frame (curtains fully closed, all content visible).
-  For the animated MP4/GIF, see render-animation.js — it parameterizes the
+  For the animated MP4, see render-animation.js — it parameterizes the
   clip-path d values + content opacity to build a frame sequence.
 
   Reels safe zones: top 220px, bottom 400px, right 180px.
