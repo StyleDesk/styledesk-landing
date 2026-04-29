@@ -21,7 +21,7 @@ const FPS = 30;
 const ANIM_DUR = 1.6;            // curtains closing — 1.6s per panel
 const RIGHT_DELAY = 0.08;        // right panel starts 80ms after left
 const FADE_DUR = 0.25;           // content fade in (snappy)
-const HOLD_DUR = 0.6;            // final hold
+const HOLD_DUR = 1.5;            // final hold — give viewers time to read
 const TOTAL_FRAMES = Math.round((ANIM_DUR + RIGHT_DELAY + FADE_DUR + HOLD_DUR) * FPS);
 
 const PREVIEW_W = 540;
