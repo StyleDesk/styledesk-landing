@@ -151,10 +151,10 @@
          (cusp shadows, swag highlights, gather lines) don't bleed outside. -->
     <clipPath id="valenceClip">
       <path d="M 0 0 L 1080 0 L 1080 120
-               Q 945 520 810 120
-               Q 675 520 540 120
-               Q 405 520 270 120
-               Q 135 520 0 120 Z"/>
+               Q 945 460 810 120
+               Q 675 460 540 120
+               Q 405 460 270 120
+               Q 135 460 0 120 Z"/>
     </clipPath>
 
     <!-- Tassel template — bell-shaped ornament + skirt + heavy fringe + gold
@@ -235,24 +235,24 @@
        gathered-fabric shading and gold tassels at the cusps. Sits in front of
        the curtain panels so they appear to hang from behind it (a real theater
        proscenium). Cusps at y=120 host the tassels; swag bottom dips to actual
-       y≈320. Inner shading layers (cusp shadows, swag highlights, gather lines)
+       y≈290. Inner shading layers (cusp shadows, swag highlights, gather lines)
        are clipped to the swag shape so they don't bleed outside. -->
   <g id="valence">
     <!-- 1. base velvet body -->
     <path d="M 0 0 L 1080 0 L 1080 120
-             Q 945 520 810 120
-             Q 675 520 540 120
-             Q 405 520 270 120
-             Q 135 520 0 120 Z"
+             Q 945 460 810 120
+             Q 675 460 540 120
+             Q 405 460 270 120
+             Q 135 460 0 120 Z"
           fill="url(#valenceVelvet)"/>
 
     <!-- 2. inner shading layers, clipped to swag shape -->
     <g clip-path="url(#valenceClip)">
       <!-- per-swag highlights: light catches the lowest hanging fabric -->
-      <ellipse cx="135" cy="320" rx="115" ry="95" fill="url(#swagHighlight)"/>
-      <ellipse cx="405" cy="320" rx="115" ry="95" fill="url(#swagHighlight)"/>
-      <ellipse cx="675" cy="320" rx="115" ry="95" fill="url(#swagHighlight)"/>
-      <ellipse cx="945" cy="320" rx="115" ry="95" fill="url(#swagHighlight)"/>
+      <ellipse cx="135" cy="290" rx="115" ry="95" fill="url(#swagHighlight)"/>
+      <ellipse cx="405" cy="290" rx="115" ry="95" fill="url(#swagHighlight)"/>
+      <ellipse cx="675" cy="290" rx="115" ry="95" fill="url(#swagHighlight)"/>
+      <ellipse cx="945" cy="290" rx="115" ry="95" fill="url(#swagHighlight)"/>
 
       <!-- per-cusp shadows: gathered/pinched fabric is much darker -->
       <ellipse cx="0"    cy="120" rx="95" ry="240" fill="url(#cuspShadow)"/>
@@ -266,47 +266,47 @@
            rounded fabric crease look. -->
       <g fill="none" stroke-linecap="round" opacity="0.55">
         <!-- from x=270 cusp -->
-        <path d="M 270 130 Q 230 220 175 320" stroke="#000" stroke-width="3"/>
-        <path d="M 270 130 Q 250 230 205 320" stroke="#000" stroke-width="2.5"/>
-        <path d="M 270 130 Q 310 220 365 320" stroke="#000" stroke-width="3"/>
-        <path d="M 270 130 Q 290 230 335 320" stroke="#000" stroke-width="2.5"/>
+        <path d="M 270 130 Q 230 200 175 290" stroke="#000" stroke-width="3"/>
+        <path d="M 270 130 Q 250 210 205 290" stroke="#000" stroke-width="2.5"/>
+        <path d="M 270 130 Q 310 200 365 290" stroke="#000" stroke-width="3"/>
+        <path d="M 270 130 Q 290 210 335 290" stroke="#000" stroke-width="2.5"/>
         <!-- from x=540 cusp -->
-        <path d="M 540 130 Q 500 220 445 320" stroke="#000" stroke-width="3"/>
-        <path d="M 540 130 Q 520 230 475 320" stroke="#000" stroke-width="2.5"/>
-        <path d="M 540 130 Q 580 220 635 320" stroke="#000" stroke-width="3"/>
-        <path d="M 540 130 Q 560 230 605 320" stroke="#000" stroke-width="2.5"/>
+        <path d="M 540 130 Q 500 200 445 290" stroke="#000" stroke-width="3"/>
+        <path d="M 540 130 Q 520 210 475 290" stroke="#000" stroke-width="2.5"/>
+        <path d="M 540 130 Q 580 200 635 290" stroke="#000" stroke-width="3"/>
+        <path d="M 540 130 Q 560 210 605 290" stroke="#000" stroke-width="2.5"/>
         <!-- from x=810 cusp -->
-        <path d="M 810 130 Q 770 220 715 320" stroke="#000" stroke-width="3"/>
-        <path d="M 810 130 Q 790 230 745 320" stroke="#000" stroke-width="2.5"/>
-        <path d="M 810 130 Q 850 220 905 320" stroke="#000" stroke-width="3"/>
-        <path d="M 810 130 Q 830 230 875 320" stroke="#000" stroke-width="2.5"/>
+        <path d="M 810 130 Q 770 200 715 290" stroke="#000" stroke-width="3"/>
+        <path d="M 810 130 Q 790 210 745 290" stroke="#000" stroke-width="2.5"/>
+        <path d="M 810 130 Q 850 200 905 290" stroke="#000" stroke-width="3"/>
+        <path d="M 810 130 Q 830 210 875 290" stroke="#000" stroke-width="2.5"/>
         <!-- from x=0 / x=1080 edge cusps (only one side visible inside frame) -->
-        <path d="M 0 130 Q 40 220 95 320" stroke="#000" stroke-width="3"/>
-        <path d="M 0 130 Q 20 230 65 320" stroke="#000" stroke-width="2.5"/>
-        <path d="M 1080 130 Q 1040 220 985 320" stroke="#000" stroke-width="3"/>
-        <path d="M 1080 130 Q 1060 230 1015 320" stroke="#000" stroke-width="2.5"/>
+        <path d="M 0 130 Q 40 200 95 290" stroke="#000" stroke-width="3"/>
+        <path d="M 0 130 Q 20 210 65 290" stroke="#000" stroke-width="2.5"/>
+        <path d="M 1080 130 Q 1040 200 985 290" stroke="#000" stroke-width="3"/>
+        <path d="M 1080 130 Q 1060 210 1015 290" stroke="#000" stroke-width="2.5"/>
       </g>
 
       <!-- bottom-edge fabric thickness shadow at each swag bottom -->
-      <ellipse cx="135" cy="335" rx="130" ry="22" fill="url(#swagBottomShadow)"/>
-      <ellipse cx="405" cy="335" rx="130" ry="22" fill="url(#swagBottomShadow)"/>
-      <ellipse cx="675" cy="335" rx="130" ry="22" fill="url(#swagBottomShadow)"/>
-      <ellipse cx="945" cy="335" rx="130" ry="22" fill="url(#swagBottomShadow)"/>
+      <ellipse cx="135" cy="305" rx="130" ry="22" fill="url(#swagBottomShadow)"/>
+      <ellipse cx="405" cy="305" rx="130" ry="22" fill="url(#swagBottomShadow)"/>
+      <ellipse cx="675" cy="305" rx="130" ry="22" fill="url(#swagBottomShadow)"/>
+      <ellipse cx="945" cy="305" rx="130" ry="22" fill="url(#swagBottomShadow)"/>
     </g>
 
     <!-- 3. two-tone braided gold trim along the scalloped edge: dark base
          stroke for the cord shadow + bright highlight stroke on top. -->
     <path d="M 1080 120
-             Q 945 520 810 120
-             Q 675 520 540 120
-             Q 405 520 270 120
-             Q 135 520 0 120"
+             Q 945 460 810 120
+             Q 675 460 540 120
+             Q 405 460 270 120
+             Q 135 460 0 120"
           fill="none" stroke="#5e3e0c" stroke-width="5" stroke-linecap="round"/>
     <path d="M 1080 120
-             Q 945 520 810 120
-             Q 675 520 540 120
-             Q 405 520 270 120
-             Q 135 520 0 120"
+             Q 945 460 810 120
+             Q 675 460 540 120
+             Q 405 460 270 120
+             Q 135 460 0 120"
           fill="none" stroke="#c9a064" stroke-width="2.2" stroke-linecap="round" stroke-opacity="0.92"/>
 
     <!-- 4. cord wrap at each cusp: little bow/tie that the cord makes around
