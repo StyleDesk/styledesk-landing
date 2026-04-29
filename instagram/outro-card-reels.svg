@@ -350,7 +350,7 @@
     </g>
 
     <!-- wordmark -->
-    <text x="540" y="1210" font-family="'Playfair Display', Georgia, serif" font-size="120" font-weight="700" text-anchor="middle" letter-spacing="-2" fill="url(#gold)">STYLEDESK.AI</text>
+    <text x="540" y="1210" font-family="'Playfair Display', Georgia, serif" font-size="96" font-weight="700" text-anchor="middle" letter-spacing="-2" fill="url(#gold)">STYLEDESK.AI</text>
 
     <!-- refined divider -->
     <line x1="380" y1="1320" x2="525" y2="1320" stroke="#c9a064" stroke-opacity="0.40" stroke-width="0.8"/>
