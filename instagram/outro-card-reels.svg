@@ -20,6 +20,11 @@
       <stop offset="50%" stop-color="#c9a064"/>
       <stop offset="100%" stop-color="#f0c6cf"/>
     </linearGradient>
+    <!-- corner vignette: subtle darken at edges so the center pops -->
+    <radialGradient id="vignette" cx="50%" cy="50%" r="75%">
+      <stop offset="55%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.50"/>
+    </radialGradient>
     <!-- ambient: faint top wash (atmospheric, behind everything) -->
     <radialGradient id="ambient" cx="50%" cy="28%" r="75%">
       <stop offset="0%" stop-color="#c9a064" stop-opacity="0.10"/>
@@ -31,6 +36,11 @@
       <stop offset="50%" stop-color="#7c1f36" stop-opacity="0.10"/>
       <stop offset="100%" stop-color="#c9a064" stop-opacity="0"/>
     </radialGradient>
+    <!-- film grain: 5% white noise overlay — kills "flat digital" feel -->
+    <filter id="grain" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" seed="3"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.05 0"/>
+    </filter>
 
     <!-- crown logo gradients (mirror styledesk-logo-square.svg) -->
     <linearGradient id="crown" x1="0" y1="0" x2="0" y2="1">
@@ -61,8 +71,10 @@
 
   <!-- background layers — DO NOT EDIT -->
   <rect width="1080" height="1920" fill="url(#bg)"/>
+  <rect width="1080" height="1920" fill="url(#vignette)"/>
   <rect width="1080" height="1920" fill="url(#ambient)"/>
   <rect width="1080" height="1920" fill="url(#crownHalo)"/>
+  <rect width="1080" height="1920" filter="url(#grain)"/>
 
   <!-- hairline gold inset border — lives inside the Reels safe zone so IG UI never clips it -->
   <rect x="80" y="240" width="920" height="1260" fill="none" stroke="#c9a064" stroke-opacity="0.18" stroke-width="1"/>
