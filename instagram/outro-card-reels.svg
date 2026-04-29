@@ -31,31 +31,6 @@
       <stop offset="50%" stop-color="#7c1f36" stop-opacity="0.10"/>
       <stop offset="100%" stop-color="#c9a064" stop-opacity="0"/>
     </radialGradient>
-    <!-- structure rings: replicates Instagram Structure 50 + Vignette 25.
-         objectBoundingBox (default) makes the rings elliptical — stretched to the
-         canvas aspect ratio just like the May launch reference. Bands are soft
-         (max ~0.10 opacity) with a faint gold center, ramping to a moderate
-         vignette at the edges. -->
-    <radialGradient id="structureRings" cx="50%" cy="42%" r="72%">
-      <stop offset="0%"   stop-color="#c9a064" stop-opacity="0.14"/>
-      <stop offset="4%"   stop-color="#c9a064" stop-opacity="0.06"/>
-      <stop offset="8%"   stop-color="#000000" stop-opacity="0.07"/>
-      <stop offset="14%"  stop-color="#000000" stop-opacity="0.02"/>
-      <stop offset="20%"  stop-color="#000000" stop-opacity="0.09"/>
-      <stop offset="26%"  stop-color="#000000" stop-opacity="0.03"/>
-      <stop offset="32%"  stop-color="#000000" stop-opacity="0.11"/>
-      <stop offset="38%"  stop-color="#000000" stop-opacity="0.04"/>
-      <stop offset="44%"  stop-color="#000000" stop-opacity="0.13"/>
-      <stop offset="50%"  stop-color="#000000" stop-opacity="0.05"/>
-      <stop offset="56%"  stop-color="#000000" stop-opacity="0.16"/>
-      <stop offset="62%"  stop-color="#000000" stop-opacity="0.07"/>
-      <stop offset="68%"  stop-color="#000000" stop-opacity="0.20"/>
-      <stop offset="74%"  stop-color="#000000" stop-opacity="0.10"/>
-      <stop offset="80%"  stop-color="#000000" stop-opacity="0.26"/>
-      <stop offset="88%"  stop-color="#000000" stop-opacity="0.18"/>
-      <stop offset="94%"  stop-color="#000000" stop-opacity="0.40"/>
-      <stop offset="100%" stop-color="#000000" stop-opacity="0.55"/>
-    </radialGradient>
 
     <!-- crown logo gradients (mirror styledesk-logo-square.svg) -->
     <linearGradient id="crown" x1="0" y1="0" x2="0" y2="1">
@@ -88,8 +63,6 @@
   <rect width="1080" height="1920" fill="url(#bg)"/>
   <rect width="1080" height="1920" fill="url(#ambient)"/>
   <rect width="1080" height="1920" fill="url(#crownHalo)"/>
-  <!-- IG Structure 50 + Vignette 25 baked-in: concentric ring banding + hard corner darkening -->
-  <rect width="1080" height="1920" fill="url(#structureRings)"/>
 
   <!-- hairline gold inset border — lives inside the Reels safe zone so IG UI never clips it -->
   <rect x="80" y="240" width="920" height="1260" fill="none" stroke="#c9a064" stroke-opacity="0.18" stroke-width="1"/>
