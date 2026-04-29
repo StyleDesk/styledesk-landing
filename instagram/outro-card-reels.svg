@@ -1,0 +1,86 @@
+<!--
+  StyleDesk Reels Outro Card — 1080×1920 (9:16)
+  3-second end card. Drop into Descript at the end of every Reel.
+
+  Reels safe zones (Instagram covers these with UI):
+    Top 220px, Bottom 400px, Right 180px
+  Critical content lives in y: 220–1520, x: ~80–900.
+
+  See DESIGN-SYSTEM.md for the full spec.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" role="img" aria-label="StyleDesk.ai outro — link in bio, June 2026">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3a0018"/>
+      <stop offset="55%" stop-color="#2a0012"/>
+      <stop offset="100%" stop-color="#1a000b"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f0c6cf"/>
+      <stop offset="50%" stop-color="#c9a064"/>
+      <stop offset="100%" stop-color="#f0c6cf"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#c9a064" stop-opacity="0.18"/>
+      <stop offset="60%" stop-color="#7c1f36" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#c9a064" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- crown logo gradients (mirror styledesk-logo-square.svg) -->
+    <linearGradient id="crown" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#932748"/>
+      <stop offset="100%" stop-color="#551024"/>
+    </linearGradient>
+    <linearGradient id="crownGloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="48%" stop-color="#ffffff" stop-opacity="0.08"/>
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="goldDot" cx="28%" cy="22%" r="95%">
+      <stop offset="0%" stop-color="#fff0b8"/>
+      <stop offset="25%" stop-color="#f2cc7a"/>
+      <stop offset="70%" stop-color="#b4833a"/>
+      <stop offset="100%" stop-color="#5e3e0c"/>
+    </radialGradient>
+    <linearGradient id="pinkBar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffe3ea"/>
+      <stop offset="55%" stop-color="#f0c6cf"/>
+      <stop offset="100%" stop-color="#c1909b"/>
+    </linearGradient>
+    <linearGradient id="pinkGloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- background layers — DO NOT EDIT -->
+  <rect width="1080" height="1920" fill="url(#bg)"/>
+  <rect width="1080" height="1920" fill="url(#glow)"/>
+
+  <!-- logo crown — scaled from 512px logo to 320px, centered at (540, 600) -->
+  <g transform="translate(380 440) scale(0.625)">
+    <path d="M143 235 L143 168 L194 204 L256 122 L318 204 L369 168 L369 235 Z" fill="url(#crown)" stroke="#fadfe4" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M143 235 L143 168 L194 204 L256 122 L318 204 L369 168 L369 235 Z" fill="url(#crownGloss)" stroke="none"/>
+    <rect x="143" y="240" width="226" height="30" rx="15" fill="url(#pinkBar)"/>
+    <rect x="147" y="242" width="218" height="13" rx="6.5" fill="url(#pinkGloss)"/>
+    <rect x="164" y="282" width="184" height="26" rx="13" fill="#9a7a80" opacity="0.92"/>
+    <rect x="184" y="318" width="144" height="23" rx="11.5" fill="#7a5a60" opacity="0.78"/>
+    <circle cx="256" cy="122" r="18" fill="url(#goldDot)"/>
+    <circle cx="143" cy="168" r="18" fill="url(#goldDot)"/>
+    <circle cx="369" cy="168" r="18" fill="url(#goldDot)"/>
+    <ellipse cx="249" cy="115" rx="6.5" ry="4" fill="#ffffff" opacity="0.7"/>
+    <ellipse cx="136" cy="161" rx="6.5" ry="4" fill="#ffffff" opacity="0.7"/>
+    <ellipse cx="362" cy="161" rx="6.5" ry="4" fill="#ffffff" opacity="0.7"/>
+  </g>
+
+  <!-- wordmark: STYLEDESK.AI in gold gradient, .AI heavier weight -->
+  <text x="540" y="970" font-family="'Helvetica Neue', 'Inter', -apple-system, 'SF Pro Display', sans-serif" font-size="115" text-anchor="middle" letter-spacing="4" fill="url(#gold)"><tspan font-weight="200">STYLEDESK</tspan><tspan font-weight="500">.AI</tspan></text>
+
+  <!-- ornamental divider — line · dot · line in gold -->
+  <line x1="450" y1="1080" x2="525" y2="1080" stroke="#c9a064" stroke-opacity="0.45"/>
+  <circle cx="540" cy="1080" r="4" fill="#c9a064" fill-opacity="0.85"/>
+  <line x1="555" y1="1080" x2="630" y2="1080" stroke="#c9a064" stroke-opacity="0.45"/>
+
+  <!-- CTA — small caps gold, generous tracking -->
+  <text x="540" y="1200" font-family="'Helvetica Neue', 'Inter', -apple-system, sans-serif" font-size="26" font-weight="300" fill="#c9a064" text-anchor="middle" letter-spacing="8">LINK IN BIO  ·  JUNE 2026</text>
+</svg>
