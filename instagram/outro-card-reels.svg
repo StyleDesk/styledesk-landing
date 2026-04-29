@@ -57,8 +57,8 @@
   <rect width="1080" height="1920" fill="url(#bg)"/>
   <rect width="1080" height="1920" fill="url(#glow)"/>
 
-  <!-- logo crown — scale 1.3 (~285px tall crown), centered at (540, 900) -->
-  <g transform="translate(207 598) scale(1.3)">
+  <!-- logo crown — scale 1.15 (~252px tall crown), centered at (540, 900) -->
+  <g transform="translate(246 633) scale(1.15)">
     <path d="M143 235 L143 168 L194 204 L256 122 L318 204 L369 168 L369 235 Z" fill="url(#crown)" stroke="#fadfe4" stroke-width="5" stroke-linejoin="round"/>
     <path d="M143 235 L143 168 L194 204 L256 122 L318 204 L369 168 L369 235 Z" fill="url(#crownGloss)" stroke="none"/>
     <rect x="143" y="240" width="226" height="30" rx="15" fill="url(#pinkBar)"/>
