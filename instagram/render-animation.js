@@ -19,8 +19,9 @@ const sharp = require('/tmp/node_modules/sharp');
 const FPS = 30;
 const ANIM_DUR = 1.6;            // curtains closing — 1.6s per panel
 const RIGHT_DELAY = 0.08;        // right panel starts 80ms after left
-const HOLD_DUR = 1.7;            // final hold — give viewers time to read
-const TOTAL_FRAMES = Math.round((ANIM_DUR + RIGHT_DELAY + HOLD_DUR) * FPS);
+const FADE_DUR = 0.25;           // content fade in (snappy)
+const HOLD_DUR = 1.5;            // final hold — give viewers time to read
+const TOTAL_FRAMES = Math.round((ANIM_DUR + RIGHT_DELAY + FADE_DUR + HOLD_DUR) * FPS);
 
 // Full Reels resolution.
 const FULL_W = 1080;
@@ -51,14 +52,20 @@ function clipPathD(t, panel) {
 }
 
 function svgForFrame(t) {
-  // Content sits on stage from frame 0 — the curtains close around/behind it
-  // as a single continuous motion, no separate post-close fade-in phase. The
-  // group is left at the SVG's authored opacity="1".
+  // Content fades in once both panels have landed.
+  const animEnd = ANIM_DUR + RIGHT_DELAY;
+  let opacity = 0;
+  if (t >= animEnd) {
+    opacity = Math.min((t - animEnd) / FADE_DUR, 1);
+  }
+
   let svg = fs.readFileSync(SVG_PATH, 'utf8');
   svg = svg.replace(/<path id="leftClipPath" d="[^"]*"\/>/,
                     `<path id="leftClipPath" d="${clipPathD(t, 'left')}"/>`);
   svg = svg.replace(/<path id="rightClipPath" d="[^"]*"\/>/,
                     `<path id="rightClipPath" d="${clipPathD(t, 'right')}"/>`);
+  svg = svg.replace('<g id="content" opacity="1">',
+                    `<g id="content" opacity="${opacity.toFixed(3)}">`);
   return svg;
 }
 
