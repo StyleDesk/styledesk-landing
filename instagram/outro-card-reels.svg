@@ -15,7 +15,9 @@
     - leftClip / rightClip : per-frame clip paths defining each panel's
       visible region as a rectangle from its outer edge to its current
       inner edge x position.
-    - topShadow   : valence darkening (curtain rod / gathered fabric area)
+    - valence     : static scalloped velvet swag at the top with three gold
+      tassels at the cusps — proscenium frame above the curtains
+    - topShadow   : proscenium-rod darkening (sits behind the valence)
     - bottomShadow: floor / hem darkening
     - crownHalo   : warm spotlight glow on the curtain behind the logo
 
@@ -104,6 +106,27 @@
       <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
     </linearGradient>
 
+    <!-- Valence velvet: brighter than the curtain body so the swag reads as a
+         separate, top-lit fabric layer (proscenium light catches it). -->
+    <linearGradient id="valenceVelvet" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#6e1234"/>
+      <stop offset="55%" stop-color="#4a0820"/>
+      <stop offset="100%" stop-color="#2a0010"/>
+    </linearGradient>
+
+    <!-- Tassel template — used at each valence cusp (x=270, 540, 810). -->
+    <g id="tassel">
+      <circle cx="0" cy="0" r="15" fill="url(#goldDot)"/>
+      <ellipse cx="-5" cy="-5" rx="5.5" ry="3.5" fill="#ffffff" opacity="0.55"/>
+      <rect x="-10" y="13" width="20" height="7" rx="2" fill="#7a5519"/>
+      <path d="M -11 20 L 11 20 L 9 64 L -9 64 Z" fill="#c9a064"/>
+      <path d="M -11 20 L 11 20 L 10 32 L -10 32 Z" fill="#fadfa0" opacity="0.35"/>
+      <line x1="-7" y1="62" x2="-7" y2="78" stroke="#7a5519" stroke-width="1.6"/>
+      <line x1="-3" y1="62" x2="-3" y2="80" stroke="#7a5519" stroke-width="1.6"/>
+      <line x1="1"  y1="62" x2="1"  y2="78" stroke="#7a5519" stroke-width="1.6"/>
+      <line x1="5"  y1="62" x2="5"  y2="79" stroke="#7a5519" stroke-width="1.6"/>
+    </g>
+
     <!-- Curtain close clip paths. Default = fully closed (each panel covers its
          half of the canvas) so the static SVG renders the final frame unchanged.
          render-animation.js rewrites each path's d attribute per frame to slide
@@ -139,9 +162,33 @@
     <rect x="540" y="0" width="540" height="1920" fill="url(#velvetBase)" opacity="0.55"/>
   </g>
 
-  <!-- top valence + floor shadow (only show when curtains are closed enough to see them) -->
+  <!-- proscenium-rod shadow + floor shadow -->
   <rect width="1080" height="320" fill="url(#topShadow)"/>
   <rect x="0" y="1600" width="1080" height="320" fill="url(#bottomShadow)"/>
+
+  <!-- Proscenium valence: 4 scalloped velvet swags across the top with gold
+       tassels at the cusps. Sits in front of the curtain panels so they appear
+       to hang from behind it (a real theater proscenium). The swag bottom dips
+       to ~y=200 at each midpoint; cusps land at y=80 and host the tassels. -->
+  <g id="valence">
+    <path d="M 0 0 L 1080 0 L 1080 80
+             Q 945 320 810 80
+             Q 675 320 540 80
+             Q 405 320 270 80
+             Q 135 320 0 80 Z"
+          fill="url(#valenceVelvet)"/>
+    <!-- thin gold trim along the scalloped edge -->
+    <path d="M 1080 80
+             Q 945 320 810 80
+             Q 675 320 540 80
+             Q 405 320 270 80
+             Q 135 320 0 80"
+          fill="none" stroke="#c9a064" stroke-opacity="0.55" stroke-width="2.2"/>
+    <!-- tassels at the three visible cusps -->
+    <use href="#tassel" x="270" y="80"/>
+    <use href="#tassel" x="540" y="80"/>
+    <use href="#tassel" x="810" y="80"/>
+  </g>
 
   <!-- stage spotlight glow on curtain behind crown -->
   <rect width="1080" height="1920" fill="url(#crownHalo)"/>
