@@ -2,20 +2,23 @@
   StyleDesk Reels Outro Card — 1080×1920 (9:16)
   3-second end card. Drop into Descript at the end of every Reel.
 
-  Background: hyper-realistic burgundy velvet stage curtains.
+  Background: hyper-realistic burgundy velvet stage curtains. Animation = the
+  classic Muppet-Show curtain CLOSE: two velvet panels slide in from the left
+  and right edges, meet at the centerline, and the logo + wordmark fade in.
+
     - velvetBase  : warm-lit top, deep red velvet falling to near-black
     - pleatLayer  : deep-shadow 3D fold gradient (one pleat unit, 135px wide)
     - leftCurtain / rightCurtain : two 540px panels, 4 pleats each. Animated
-      to fall down from the top corners via render-animation.js, with a wavy
-      clip-path hem so the cloth reads as drape (not a sliding rectangle).
-    - leftClip / rightClip : per-frame clip paths whose bottom edge is a
-      sinusoidal hem (wavelength = 135px = one pleat unit, so the ripple
-      tracks the pleat geometry).
+      to slide in from their outer edges via render-animation.js, with a wavy
+      clip-path inner edge so the cloth reads as drape (not a sliding rect).
+    - leftClip / rightClip : per-frame clip paths whose inner vertical edge is
+      a sinusoidal ripple along y (wavelength = 135px = one pleat unit, so the
+      ripple tracks the pleat geometry).
     - topShadow   : valence darkening (curtain rod / gathered fabric area)
     - bottomShadow: floor / hem darkening
     - crownHalo   : warm spotlight glow on the curtain behind the logo
 
-  This static SVG = the final frame (curtains fully fallen, all content visible).
+  This static SVG = the final frame (curtains fully closed, all content visible).
   For the animated MP4/GIF, see render-animation.js — it parameterizes the
   clip-path d values + content opacity to build a frame sequence.
 
@@ -100,10 +103,10 @@
       <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
     </linearGradient>
 
-    <!-- Curtain drop clip paths. Default = fully fallen (covers the whole panel)
-         so the static SVG renders the final frame unchanged. render-animation.js
-         rewrites each path's d attribute per frame to drop a wavy hem from the
-         top of the canvas downward. -->
+    <!-- Curtain close clip paths. Default = fully closed (each panel covers its
+         half of the canvas) so the static SVG renders the final frame unchanged.
+         render-animation.js rewrites each path's d attribute per frame to slide
+         the panel in horizontally from its outer edge with a wavy inner hem. -->
     <clipPath id="leftClip">
       <path id="leftClipPath" d="M 0 0 L 540 0 L 540 1920 L 0 1920 Z"/>
     </clipPath>
@@ -115,8 +118,8 @@
   <!-- backstage base (visible when curtains are open) -->
   <rect width="1080" height="1920" fill="url(#velvetBase)"/>
 
-  <!-- LEFT curtain panel: 540px wide, 4 pleats × 135px. Anchored at the top-left
-       corner; falls down from above with a wavy clip-path hem (see leftClip). -->
+  <!-- LEFT curtain panel: 540px wide, 4 pleats × 135px. Slides in from the left
+       edge with a wavy clip-path inner hem (see leftClip). -->
   <g id="leftCurtain" clip-path="url(#leftClip)">
     <rect x="0"   y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
     <rect x="135" y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
@@ -126,7 +129,7 @@
     <rect x="0" y="0" width="540" height="1920" fill="url(#velvetBase)" opacity="0.55"/>
   </g>
 
-  <!-- RIGHT curtain panel: mirror of left, anchored at the top-right corner. -->
+  <!-- RIGHT curtain panel: mirror of left, slides in from the right edge. -->
   <g id="rightCurtain" clip-path="url(#rightClip)">
     <rect x="540" y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
     <rect x="675" y="0" width="135" height="1920" fill="url(#pleatLayer)"/>

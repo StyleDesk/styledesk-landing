@@ -1,15 +1,16 @@
-// Renders the StyleDesk outro card as a falling-drape animation.
+// Renders the StyleDesk outro card as a Muppet-Show-style curtain close.
 //
 // Usage:
 //   node render-animation.js               # GIF preview (540×960, 30fps)
 //   node render-animation.js --mp4         # also generates 1080×1920 MP4 for Descript
 //
-// Pipeline: parameterize the outro SVG (clipPath wavy hem + content opacity),
-// render N frames via sharp, then ffmpeg into GIF / MP4. Each curtain panel is
-// anchored at its top corner; a wavy clip-path bottom edge drops from y=-WAVE_AMP
-// to y=1920+WAVE_AMP over ANIM_DUR, so the cloth appears to fall with a rippled
-// hem driven by the pleat geometry (135px wavelength). The right panel starts
-// RIGHT_DELAY seconds after the left for a more organic, non-synchronized feel.
+// Pipeline: parameterize the outro SVG (clipPath wavy inner edge + content
+// opacity), render N frames via sharp, then ffmpeg into GIF / MP4. Each curtain
+// panel slides in horizontally from its outer edge toward the center stage line
+// (x=540). The clip-path's inner vertical edge has a sinusoidal ripple along y
+// (wavelength = 135px = one pleat unit) so the cloth reads as drape catching up
+// with the panel's motion, not a sliding rectangle. The right panel starts
+// RIGHT_DELAY seconds after the left for an organic, non-synchronized feel.
 
 const fs = require('fs');
 const path = require('path');
@@ -17,7 +18,7 @@ const { execSync } = require('child_process');
 const sharp = require('/tmp/node_modules/sharp');
 
 const FPS = 30;
-const ANIM_DUR = 1.6;            // curtains falling — 1.6s per panel
+const ANIM_DUR = 1.6;            // curtains closing — 1.6s per panel
 const RIGHT_DELAY = 0.08;        // right panel starts 80ms after left
 const FADE_DUR = 0.5;            // content fade in
 const HOLD_DUR = 0.6;            // final hold
@@ -28,43 +29,48 @@ const PREVIEW_H = 960;
 const FULL_W = 1080;
 const FULL_H = 1920;
 
-const WAVE_AMP = 28;             // hem ripple amplitude (px)
+const WAVE_AMP = 22;             // inner-edge ripple amplitude (px)
 const WAVE_LEN = 135;            // matches one pleat unit
-const SAMPLES = 28;              // segments per panel along the hem
+const SAMPLES = 28;              // segments per panel along the inner edge
 
 const OUT_DIR = path.join(__dirname, 'png-ready', '_frames');
 const GIF_OUT = path.join(__dirname, 'png-ready', 'outro-card-reels.gif');
 const MP4_OUT = path.join(__dirname, 'png-ready', 'outro-card-reels.mp4');
 const SVG_PATH = path.join(__dirname, 'outro-card-reels.svg');
 
-// Quadratic-ish ease-out: starts moving immediately, settles toward the end.
-// Reads as cloth released under gravity with tension catching up at the bottom.
+// Quadratic-ish ease-out: starts moving immediately, settles into place at the
+// end. Reads as a stagehand pulling the curtain in, then easing it shut.
 const easeOut = t => 1 - Math.pow(1 - t, 2.4);
 
-function hemY(h, x, phase) {
-  return h + WAVE_AMP * Math.sin((2 * Math.PI * x) / WAVE_LEN + phase);
+function innerEdgeX(innerX, y, phase) {
+  return innerX + WAVE_AMP * Math.sin((2 * Math.PI * y) / WAVE_LEN + phase);
 }
 
 function clipPathD(t, panel) {
-  // panel: 'left' covers x=0..540, 'right' covers x=540..1080.
+  // Closing motion: each panel slides in from its outer edge toward the
+  // centerline at x=540. Left panel grows from x=0 (zero width) to x=0..540.
+  // Right panel grows from x=1080 (zero width) to x=540..1080.
   const ts = panel === 'right' ? Math.max(0, t - RIGHT_DELAY) : t;
   const p = Math.max(0, Math.min(ts / ANIM_DUR, 1));
   const eased = easeOut(p);
-  const h = -WAVE_AMP + (1920 + 2 * WAVE_AMP) * eased;
-  // Slight phase shift over time + offset between panels so the two hems don't
+
+  // Inner vertical edge x position (the loose hem leading the slide).
+  const innerX = panel === 'right' ? 1080 - 540 * eased : 540 * eased;
+
+  // Phase shift over time + offset between panels so the two inner edges don't
   // ripple in lock-step.
   const phase = -ts * 5.0 + (panel === 'right' ? Math.PI / 3 : 0);
 
-  const x0 = panel === 'right' ? 540 : 0;
-  const x1 = panel === 'right' ? 1080 : 540;
+  const outerX = panel === 'right' ? 1080 : 0;
 
-  let d = `M ${x0} 0 L ${x1} 0`;
-  // Walk the hem from the inner edge back to the outer edge.
+  // Walk: outer-top → inner-top → wavy down inner edge → inner-bottom →
+  // outer-bottom → close.
+  let d = `M ${outerX} 0 L ${innerX.toFixed(2)} 0`;
   for (let i = 0; i <= SAMPLES; i++) {
-    const x = x1 - ((x1 - x0) * i) / SAMPLES;
-    d += ` L ${x.toFixed(2)} ${hemY(h, x, phase).toFixed(2)}`;
+    const y = (1920 * i) / SAMPLES;
+    d += ` L ${innerEdgeX(innerX, y, phase).toFixed(2)} ${y.toFixed(2)}`;
   }
-  return d + ' Z';
+  return d + ` L ${outerX} 1920 Z`;
 }
 
 function svgForFrame(t) {
