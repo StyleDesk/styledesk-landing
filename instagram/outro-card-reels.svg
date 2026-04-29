@@ -9,11 +9,12 @@
     - velvetBase  : warm-lit top, deep red velvet falling to near-black
     - pleatLayer  : deep-shadow 3D fold gradient (one pleat unit, 135px wide)
     - leftCurtain / rightCurtain : two 540px panels, 4 pleats each. Animated
-      to slide in from their outer edges via render-animation.js, with a wavy
-      clip-path inner edge so the cloth reads as drape (not a sliding rect).
-    - leftClip / rightClip : per-frame clip paths whose inner vertical edge is
-      a sinusoidal ripple along y (wavelength = 135px = one pleat unit, so the
-      ripple tracks the pleat geometry).
+      to slide in horizontally from their outer edges via render-animation.js.
+      Inner leading edge is a straight vertical line — the pleat geometry
+      gives the cloth its read.
+    - leftClip / rightClip : per-frame clip paths defining each panel's
+      visible region as a rectangle from its outer edge to its current
+      inner edge x position.
     - topShadow   : valence darkening (curtain rod / gathered fabric area)
     - bottomShadow: floor / hem darkening
     - crownHalo   : warm spotlight glow on the curtain behind the logo
@@ -106,7 +107,7 @@
     <!-- Curtain close clip paths. Default = fully closed (each panel covers its
          half of the canvas) so the static SVG renders the final frame unchanged.
          render-animation.js rewrites each path's d attribute per frame to slide
-         the panel in horizontally from its outer edge with a wavy inner hem. -->
+         the panel in horizontally from its outer edge with a straight inner edge. -->
     <clipPath id="leftClip">
       <path id="leftClipPath" d="M 0 0 L 540 0 L 540 1920 L 0 1920 Z"/>
     </clipPath>
@@ -119,7 +120,7 @@
   <rect width="1080" height="1920" fill="url(#velvetBase)"/>
 
   <!-- LEFT curtain panel: 540px wide, 4 pleats × 135px. Slides in from the left
-       edge with a wavy clip-path inner hem (see leftClip). -->
+       edge (see leftClip). -->
   <g id="leftCurtain" clip-path="url(#leftClip)">
     <rect x="0"   y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
     <rect x="135" y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
