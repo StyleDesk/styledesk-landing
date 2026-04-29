@@ -1,7 +1,7 @@
 // Renders the StyleDesk outro card as a Muppet-Show-style curtain close.
 //
 // Usage:
-//   node render-animation.js               # GIF preview (540×960, 30fps)
+//   node render-animation.js               # GIF (1080×1920, 30fps)
 //   node render-animation.js --mp4         # also generates 1080×1920 MP4 for Descript
 //
 // Pipeline: parameterize the outro SVG (clipPath inner edge + content opacity),
@@ -24,8 +24,9 @@ const FADE_DUR = 0.25;           // content fade in (snappy)
 const HOLD_DUR = 1.5;            // final hold — give viewers time to read
 const TOTAL_FRAMES = Math.round((ANIM_DUR + RIGHT_DELAY + FADE_DUR + HOLD_DUR) * FPS);
 
-const PREVIEW_W = 540;
-const PREVIEW_H = 960;
+// Render the GIF at full Reels resolution (1080×1920) so Instagram doesn't
+// upscale and blur the wordmark. Bigger file but text + gold gradient stay
+// crisp. The optional MP4 uses the same frames.
 const FULL_W = 1080;
 const FULL_H = 1920;
 
@@ -91,30 +92,29 @@ async function main() {
     fs.mkdirSync(OUT_DIR, { recursive: true });
   }
 
-  console.log(`Rendering ${TOTAL_FRAMES} frames at ${PREVIEW_W}×${PREVIEW_H}…`);
+  console.log(`Rendering ${TOTAL_FRAMES} frames at ${FULL_W}×${FULL_H}…`);
   for (let i = 0; i < TOTAL_FRAMES; i++) {
-    await renderFrame(i, PREVIEW_W, PREVIEW_H);
+    await renderFrame(i, FULL_W, FULL_H);
     if (i % 10 === 0) process.stdout.write(`  ${i}/${TOTAL_FRAMES}\r`);
   }
   console.log(`  ${TOTAL_FRAMES}/${TOTAL_FRAMES} done.`);
 
+  // stats_mode=full weights every pixel of every frame (so the wordmark, which
+  // only exists in the held final frames, gets full palette weight). Sierra
+  // 2-4a dithering keeps the gold-gradient text + smooth velvet gradient clean
+  // — bayer dither produces visible cross-hatch on both.
   const palette = path.join(OUT_DIR, '_palette.png');
   console.log('Building palette…');
   execSync(`ffmpeg -y -framerate ${FPS} -i ${OUT_DIR}/f%04d.png ` +
-           `-vf "palettegen=stats_mode=diff" ${palette}`, { stdio: 'inherit' });
+           `-vf "palettegen=stats_mode=full:max_colors=256" ${palette}`,
+           { stdio: 'inherit' });
   console.log('Encoding GIF…');
   execSync(`ffmpeg -y -framerate ${FPS} -i ${OUT_DIR}/f%04d.png -i ${palette} ` +
-           `-lavfi "paletteuse=dither=bayer:bayer_scale=4" ${GIF_OUT}`,
+           `-lavfi "paletteuse=dither=sierra2_4a:diff_mode=rectangle" ${GIF_OUT}`,
            { stdio: 'inherit' });
   console.log(`GIF: ${GIF_OUT}`);
 
   if (wantMp4) {
-    console.log(`Rendering ${TOTAL_FRAMES} frames at ${FULL_W}×${FULL_H} for MP4…`);
-    for (let i = 0; i < TOTAL_FRAMES; i++) {
-      await renderFrame(i, FULL_W, FULL_H);
-      if (i % 10 === 0) process.stdout.write(`  ${i}/${TOTAL_FRAMES}\r`);
-    }
-    console.log(`  ${TOTAL_FRAMES}/${TOTAL_FRAMES} done.`);
     console.log('Encoding MP4 (H.264, yuv420p, faststart)…');
     execSync(`ffmpeg -y -framerate ${FPS} -i ${OUT_DIR}/f%04d.png ` +
              `-c:v libx264 -pix_fmt yuv420p -movflags +faststart -crf 18 ${MP4_OUT}`,
