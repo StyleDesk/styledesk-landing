@@ -82,5 +82,5 @@
   <line x1="555" y1="1320" x2="630" y2="1320" stroke="#c9a064" stroke-opacity="0.45"/>
 
   <!-- CTA — small caps gold, generous tracking -->
-  <text x="540" y="1430" font-family="'Helvetica Neue', 'Inter', -apple-system, sans-serif" font-size="26" font-weight="300" fill="#c9a064" text-anchor="middle" letter-spacing="8">LINK IN BIO  ·  BOOK A DEMO</text>
+  <text x="540" y="1430" font-family="'Helvetica Neue', 'Inter', -apple-system, sans-serif" font-size="26" font-weight="300" fill="#c9a064" text-anchor="middle" letter-spacing="8">BOOK A DEMO  ·  LINK IN BIO</text>
 </svg>
