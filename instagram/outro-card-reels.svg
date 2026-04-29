@@ -57,8 +57,8 @@
   <rect width="1080" height="1920" fill="url(#bg)"/>
   <rect width="1080" height="1920" fill="url(#glow)"/>
 
-  <!-- logo crown — scaled from 512px logo to ~435px, centered at (540, 780) -->
-  <g transform="translate(323 563) scale(0.85)">
+  <!-- logo crown — scale 1.5 (~330px tall crown), centered at (540, 900) -->
+  <g transform="translate(156 552) scale(1.5)">
     <path d="M143 235 L143 168 L194 204 L256 122 L318 204 L369 168 L369 235 Z" fill="url(#crown)" stroke="#fadfe4" stroke-width="5" stroke-linejoin="round"/>
     <path d="M143 235 L143 168 L194 204 L256 122 L318 204 L369 168 L369 235 Z" fill="url(#crownGloss)" stroke="none"/>
     <rect x="143" y="240" width="226" height="30" rx="15" fill="url(#pinkBar)"/>
@@ -73,14 +73,14 @@
     <ellipse cx="362" cy="161" rx="6.5" ry="4" fill="#ffffff" opacity="0.7"/>
   </g>
 
-  <!-- wordmark: STYLEDESK.AI in gold gradient, .AI heavier weight -->
-  <text x="540" y="1140" font-family="'Helvetica Neue', 'Inter', -apple-system, 'SF Pro Display', sans-serif" font-size="115" text-anchor="middle" letter-spacing="4" fill="url(#gold)"><tspan font-weight="200">STYLEDESK</tspan><tspan font-weight="500">.AI</tspan></text>
+  <!-- wordmark: STYLEDESK.AI in Playfair Display (matches landing page .hero h1) -->
+  <text x="540" y="1210" font-family="'Playfair Display', Georgia, serif" font-size="120" font-weight="700" text-anchor="middle" letter-spacing="-2" fill="url(#gold)">STYLEDESK.AI</text>
 
   <!-- ornamental divider — line · dot · line in gold -->
-  <line x1="450" y1="1240" x2="525" y2="1240" stroke="#c9a064" stroke-opacity="0.45"/>
-  <circle cx="540" cy="1240" r="4" fill="#c9a064" fill-opacity="0.85"/>
-  <line x1="555" y1="1240" x2="630" y2="1240" stroke="#c9a064" stroke-opacity="0.45"/>
+  <line x1="450" y1="1320" x2="525" y2="1320" stroke="#c9a064" stroke-opacity="0.45"/>
+  <circle cx="540" cy="1320" r="4" fill="#c9a064" fill-opacity="0.85"/>
+  <line x1="555" y1="1320" x2="630" y2="1320" stroke="#c9a064" stroke-opacity="0.45"/>
 
   <!-- CTA — small caps gold, generous tracking -->
-  <text x="540" y="1350" font-family="'Helvetica Neue', 'Inter', -apple-system, sans-serif" font-size="26" font-weight="300" fill="#c9a064" text-anchor="middle" letter-spacing="8">LINK IN BIO  ·  BOOK A DEMO</text>
+  <text x="540" y="1430" font-family="'Helvetica Neue', 'Inter', -apple-system, sans-serif" font-size="26" font-weight="300" fill="#c9a064" text-anchor="middle" letter-spacing="8">LINK IN BIO  ·  BOOK A DEMO</text>
 </svg>
