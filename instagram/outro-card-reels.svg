@@ -2,18 +2,28 @@
   StyleDesk Reels Outro Card — 1080×1920 (9:16)
   3-second end card. Drop into Descript at the end of every Reel.
 
-  Background: hyper-realistic burgundy velvet stage curtains.
+  Background: hyper-realistic burgundy velvet stage curtains. Animation = the
+  classic Muppet-Show curtain CLOSE: two velvet panels slide in from the left
+  and right edges, meet at the centerline, and the logo + wordmark fade in.
+
     - velvetBase  : warm-lit top, deep red velvet falling to near-black
     - pleatLayer  : deep-shadow 3D fold gradient (one pleat unit, 135px wide)
     - leftCurtain / rightCurtain : two 540px panels, 4 pleats each. Animated
-      to close in from the sides via render-animation.js.
-    - topShadow   : valence darkening (curtain rod / gathered fabric area)
+      to slide in horizontally from their outer edges via render-animation.js.
+      Inner leading edge is a straight vertical line — the pleat geometry
+      gives the cloth its read.
+    - leftClip / rightClip : per-frame clip paths defining each panel's
+      visible region as a rectangle from its outer edge to its current
+      inner edge x position.
+    - valence     : static scalloped velvet swag at the top with three gold
+      tassels at the cusps — proscenium frame above the curtains
+    - topShadow   : proscenium-rod darkening (sits behind the valence)
     - bottomShadow: floor / hem darkening
     - crownHalo   : warm spotlight glow on the curtain behind the logo
 
   This static SVG = the final frame (curtains fully closed, all content visible).
-  For the animated MP4/GIF, see render-animation.js — it parameterizes the
-  panel translate values + content opacity to build a frame sequence.
+  For the animated MP4, see render-animation.js — it parameterizes the
+  clip-path d values + content opacity to build a frame sequence.
 
   Reels safe zones: top 220px, bottom 400px, right 180px.
 -->
@@ -63,10 +73,13 @@
       <stop offset="100%" stop-color="#f0c6cf"/>
     </linearGradient>
 
-    <!-- crown halo: warm stage spotlight on curtain behind the logo -->
-    <radialGradient id="crownHalo" cx="50%" cy="47%" r="34%">
-      <stop offset="0%" stop-color="#c9a064" stop-opacity="0.30"/>
-      <stop offset="50%" stop-color="#7c1f36" stop-opacity="0.14"/>
+    <!-- crown halo: warm stage spotlight on curtain behind the logo. Tight
+         radius + aggressive falloff so the glow doesn't bleed onto the
+         STYLEDESK.AI wordmark below at y=1210. -->
+    <radialGradient id="crownHalo" cx="50%" cy="43%" r="22%">
+      <stop offset="0%"  stop-color="#c9a064" stop-opacity="0.32"/>
+      <stop offset="35%" stop-color="#7c1f36" stop-opacity="0.14"/>
+      <stop offset="80%" stop-color="#7c1f36" stop-opacity="0"/>
       <stop offset="100%" stop-color="#c9a064" stop-opacity="0"/>
     </radialGradient>
 
@@ -86,6 +99,27 @@
       <stop offset="70%" stop-color="#b4833a"/>
       <stop offset="100%" stop-color="#5e3e0c"/>
     </radialGradient>
+
+    <!-- Soft gold glow halo placed behind each crown jewel — makes the three
+         gold dots read as lit gems, not flat circles. -->
+    <radialGradient id="jewelGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#fff0b8" stop-opacity="0.85"/>
+      <stop offset="30%" stop-color="#f2cc7a" stop-opacity="0.45"/>
+      <stop offset="65%" stop-color="#b4833a" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#b4833a" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Soft drop shadow under the crown — applied to a black-fill silhouette
+         offset down a few px so the crown lifts off the curtain. -->
+    <filter id="crownDropShadow" x="-25%" y="-25%" width="150%" height="160%">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+
+    <!-- Subtle warm rim light: blur of a thick gold stroke on the crown
+         silhouette, so the edge picks up a soft halo. -->
+    <filter id="crownRimGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3.5"/>
+    </filter>
     <linearGradient id="pinkBar" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#ffe3ea"/>
       <stop offset="55%" stop-color="#f0c6cf"/>
@@ -95,13 +129,111 @@
       <stop offset="0%" stop-color="#ffffff" stop-opacity="0.45"/>
       <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
     </linearGradient>
+
+    <!-- Valence velvet: brighter than the curtain body so the swag reads as a
+         separate, top-lit fabric layer (proscenium light catches it). -->
+    <linearGradient id="valenceVelvet" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#7a1640"/>
+      <stop offset="35%" stop-color="#5a0e26"/>
+      <stop offset="75%" stop-color="#3a0018"/>
+      <stop offset="100%" stop-color="#1a000b"/>
+    </linearGradient>
+
+    <!-- Gathered-fabric shadow at each swag cusp (where the cloth is bunched
+         and pinched up). Vertical ellipse, dark center fading out. -->
+    <radialGradient id="cuspShadow" cx="50%" cy="0%" r="80%" fx="50%" fy="0%">
+      <stop offset="0%"  stop-color="#000000" stop-opacity="0.78"/>
+      <stop offset="35%" stop-color="#000000" stop-opacity="0.42"/>
+      <stop offset="70%" stop-color="#000000" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Light catching the lowest hanging fabric at each swag bottom — soft
+         pink-toned highlight so the bottom of each festoon reads as lit. -->
+    <radialGradient id="swagHighlight" cx="50%" cy="100%" r="80%" fx="50%" fy="100%">
+      <stop offset="0%"  stop-color="#a83258" stop-opacity="0.55"/>
+      <stop offset="50%" stop-color="#7c1f36" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#7c1f36" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Heavy darkening just above the scalloped edge: fabric thickness +
+         shadow the swag casts on the curtains behind. -->
+    <radialGradient id="swagBottomShadow" cx="50%" cy="100%" r="55%" fx="50%" fy="100%">
+      <stop offset="0%"  stop-color="#000000" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Cord wrap around the cusp pinch (the rope/cord that ties the fabric
+         up at the tassel). Two-tone braided gold. -->
+    <linearGradient id="goldCord" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#fadfa0"/>
+      <stop offset="50%" stop-color="#a07020"/>
+      <stop offset="100%" stop-color="#5e3e0c"/>
+    </linearGradient>
+
+    <!-- Clip path = exact valence shape, used so the inner detail elements
+         (cusp shadows, swag highlights, gather lines) don't bleed outside. -->
+    <clipPath id="valenceClip">
+      <path d="M 0 0 L 1080 0 L 1080 120
+               Q 945 460 810 120
+               Q 675 460 540 120
+               Q 405 460 270 120
+               Q 135 460 0 120 Z"/>
+    </clipPath>
+
+    <!-- Tassel template — bell-shaped ornament + skirt + heavy fringe + gold
+         cord wrap. Anchored so (0,0) sits at the cusp pinch; the cord hangs
+         downward from there. Used at each visible cusp (x=270, 540, 810). -->
+    <g id="tassel">
+      <!-- cord coming down from the cusp pinch -->
+      <rect x="-3" y="-2" width="6" height="34" fill="url(#goldCord)"/>
+      <!-- knot/cap binding the cord -->
+      <ellipse cx="0" cy="34" rx="14" ry="6" fill="#5e3e0c"/>
+      <ellipse cx="0" cy="32" rx="14" ry="5" fill="url(#goldCord)"/>
+      <!-- bell-shaped ornament -->
+      <ellipse cx="0" cy="56" rx="22" ry="26" fill="url(#goldDot)"/>
+      <ellipse cx="-7" cy="46" rx="8" ry="5" fill="#ffffff" opacity="0.6"/>
+      <ellipse cx="0" cy="80" rx="22" ry="6" fill="#5e3e0c" opacity="0.55"/>
+      <!-- cap binding below the bell -->
+      <rect x="-15" y="82" width="30" height="11" rx="2.5" fill="#5e3e0c"/>
+      <line x1="-15" y1="85" x2="15" y2="85" stroke="#a07020" stroke-width="0.9"/>
+      <line x1="-15" y1="89" x2="15" y2="89" stroke="#a07020" stroke-width="0.9"/>
+      <!-- tassel skirt (slight taper) -->
+      <path d="M -16 93 L 16 93 L 13 158 L -13 158 Z" fill="#c9a064"/>
+      <path d="M -16 93 L 16 93 L 14 110 L -14 110 Z" fill="#fadfa0" opacity="0.45"/>
+      <path d="M -16 93 L -13 158 L -8 156 L -11 93 Z" fill="#5e3e0c" opacity="0.4"/>
+      <!-- fringe strands -->
+      <g stroke="#7a5519" stroke-width="1.8" stroke-linecap="round">
+        <line x1="-12" y1="155" x2="-13" y2="180"/>
+        <line x1="-9"  y1="155" x2="-9"  y2="184"/>
+        <line x1="-6"  y1="155" x2="-6"  y2="178"/>
+        <line x1="-3"  y1="155" x2="-3"  y2="186"/>
+        <line x1="0"   y1="155" x2="0"   y2="180"/>
+        <line x1="3"   y1="155" x2="3"   y2="184"/>
+        <line x1="6"   y1="155" x2="6"   y2="178"/>
+        <line x1="9"   y1="155" x2="10"  y2="186"/>
+        <line x1="12"  y1="155" x2="13"  y2="180"/>
+      </g>
+    </g>
+
+    <!-- Curtain close clip paths. Default = fully closed (each panel covers its
+         half of the canvas) so the static SVG renders the final frame unchanged.
+         render-animation.js rewrites each path's d attribute per frame to slide
+         the panel in horizontally from its outer edge with a straight inner edge. -->
+    <clipPath id="leftClip">
+      <path id="leftClipPath" d="M 0 0 L 540 0 L 540 1920 L 0 1920 Z"/>
+    </clipPath>
+    <clipPath id="rightClip">
+      <path id="rightClipPath" d="M 540 0 L 1080 0 L 1080 1920 L 540 1920 Z"/>
+    </clipPath>
   </defs>
 
   <!-- backstage base (visible when curtains are open) -->
   <rect width="1080" height="1920" fill="url(#velvetBase)"/>
 
-  <!-- LEFT curtain panel: 540px wide, 4 pleats × 135px. Translates from -540 (open) to 0 (closed). -->
-  <g id="leftCurtain" transform="translate(0 0)">
+  <!-- LEFT curtain panel: 540px wide, 4 pleats × 135px. Slides in from the left
+       edge (see leftClip). -->
+  <g id="leftCurtain" clip-path="url(#leftClip)">
     <rect x="0"   y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
     <rect x="135" y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
     <rect x="270" y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
@@ -110,8 +242,8 @@
     <rect x="0" y="0" width="540" height="1920" fill="url(#velvetBase)" opacity="0.55"/>
   </g>
 
-  <!-- RIGHT curtain panel: mirror of left. Translates from +540 (open) to 0 (closed). -->
-  <g id="rightCurtain" transform="translate(0 0)">
+  <!-- RIGHT curtain panel: mirror of left, slides in from the right edge. -->
+  <g id="rightCurtain" clip-path="url(#rightClip)">
     <rect x="540" y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
     <rect x="675" y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
     <rect x="810" y="0" width="135" height="1920" fill="url(#pleatLayer)"/>
@@ -119,9 +251,105 @@
     <rect x="540" y="0" width="540" height="1920" fill="url(#velvetBase)" opacity="0.55"/>
   </g>
 
-  <!-- top valence + floor shadow (only show when curtains are closed enough to see them) -->
+  <!-- proscenium-rod shadow + floor shadow -->
   <rect width="1080" height="320" fill="url(#topShadow)"/>
   <rect x="0" y="1600" width="1080" height="320" fill="url(#bottomShadow)"/>
+
+  <!-- Proscenium valence: 4 deep scalloped velvet swags across the top with
+       gathered-fabric shading and gold tassels at the cusps. Sits in front of
+       the curtain panels so they appear to hang from behind it (a real theater
+       proscenium). Cusps at y=120 host the tassels; swag bottom dips to actual
+       y≈290. Inner shading layers (cusp shadows, swag highlights, gather lines)
+       are clipped to the swag shape so they don't bleed outside. -->
+  <g id="valence">
+    <!-- 1. base velvet body -->
+    <path d="M 0 0 L 1080 0 L 1080 120
+             Q 945 460 810 120
+             Q 675 460 540 120
+             Q 405 460 270 120
+             Q 135 460 0 120 Z"
+          fill="url(#valenceVelvet)"/>
+
+    <!-- 2. inner shading layers, clipped to swag shape -->
+    <g clip-path="url(#valenceClip)">
+      <!-- per-swag highlights: light catches the lowest hanging fabric -->
+      <ellipse cx="135" cy="290" rx="115" ry="95" fill="url(#swagHighlight)"/>
+      <ellipse cx="405" cy="290" rx="115" ry="95" fill="url(#swagHighlight)"/>
+      <ellipse cx="675" cy="290" rx="115" ry="95" fill="url(#swagHighlight)"/>
+      <ellipse cx="945" cy="290" rx="115" ry="95" fill="url(#swagHighlight)"/>
+
+      <!-- per-cusp shadows: gathered/pinched fabric is much darker -->
+      <ellipse cx="0"    cy="120" rx="95" ry="240" fill="url(#cuspShadow)"/>
+      <ellipse cx="270"  cy="120" rx="95" ry="240" fill="url(#cuspShadow)"/>
+      <ellipse cx="540"  cy="120" rx="95" ry="240" fill="url(#cuspShadow)"/>
+      <ellipse cx="810"  cy="120" rx="95" ry="240" fill="url(#cuspShadow)"/>
+      <ellipse cx="1080" cy="120" rx="95" ry="240" fill="url(#cuspShadow)"/>
+
+      <!-- gather lines: thin curved paths radiating from each cusp toward the
+           swag bottom. Two strokes (dark + slight highlight) per line for
+           rounded fabric crease look. -->
+      <g fill="none" stroke-linecap="round" opacity="0.55">
+        <!-- from x=270 cusp -->
+        <path d="M 270 130 Q 230 200 175 290" stroke="#000" stroke-width="3"/>
+        <path d="M 270 130 Q 250 210 205 290" stroke="#000" stroke-width="2.5"/>
+        <path d="M 270 130 Q 310 200 365 290" stroke="#000" stroke-width="3"/>
+        <path d="M 270 130 Q 290 210 335 290" stroke="#000" stroke-width="2.5"/>
+        <!-- from x=540 cusp -->
+        <path d="M 540 130 Q 500 200 445 290" stroke="#000" stroke-width="3"/>
+        <path d="M 540 130 Q 520 210 475 290" stroke="#000" stroke-width="2.5"/>
+        <path d="M 540 130 Q 580 200 635 290" stroke="#000" stroke-width="3"/>
+        <path d="M 540 130 Q 560 210 605 290" stroke="#000" stroke-width="2.5"/>
+        <!-- from x=810 cusp -->
+        <path d="M 810 130 Q 770 200 715 290" stroke="#000" stroke-width="3"/>
+        <path d="M 810 130 Q 790 210 745 290" stroke="#000" stroke-width="2.5"/>
+        <path d="M 810 130 Q 850 200 905 290" stroke="#000" stroke-width="3"/>
+        <path d="M 810 130 Q 830 210 875 290" stroke="#000" stroke-width="2.5"/>
+        <!-- from x=0 / x=1080 edge cusps (only one side visible inside frame) -->
+        <path d="M 0 130 Q 40 200 95 290" stroke="#000" stroke-width="3"/>
+        <path d="M 0 130 Q 20 210 65 290" stroke="#000" stroke-width="2.5"/>
+        <path d="M 1080 130 Q 1040 200 985 290" stroke="#000" stroke-width="3"/>
+        <path d="M 1080 130 Q 1060 210 1015 290" stroke="#000" stroke-width="2.5"/>
+      </g>
+
+      <!-- bottom-edge fabric thickness shadow at each swag bottom -->
+      <ellipse cx="135" cy="305" rx="130" ry="22" fill="url(#swagBottomShadow)"/>
+      <ellipse cx="405" cy="305" rx="130" ry="22" fill="url(#swagBottomShadow)"/>
+      <ellipse cx="675" cy="305" rx="130" ry="22" fill="url(#swagBottomShadow)"/>
+      <ellipse cx="945" cy="305" rx="130" ry="22" fill="url(#swagBottomShadow)"/>
+    </g>
+
+    <!-- 3. two-tone braided gold trim along the scalloped edge: dark base
+         stroke for the cord shadow + bright highlight stroke on top. -->
+    <path d="M 1080 120
+             Q 945 460 810 120
+             Q 675 460 540 120
+             Q 405 460 270 120
+             Q 135 460 0 120"
+          fill="none" stroke="#5e3e0c" stroke-width="5" stroke-linecap="round"/>
+    <path d="M 1080 120
+             Q 945 460 810 120
+             Q 675 460 540 120
+             Q 405 460 270 120
+             Q 135 460 0 120"
+          fill="none" stroke="#c9a064" stroke-width="2.2" stroke-linecap="round" stroke-opacity="0.92"/>
+
+    <!-- 4. cord wrap at each cusp: little bow/tie that the cord makes around
+         the gathered fabric pinch. Drawn before the tassel so the tassel cord
+         appears to descend from underneath. -->
+    <g id="cuspCords">
+      <ellipse cx="270" cy="118" rx="22" ry="9" fill="url(#goldCord)"/>
+      <ellipse cx="270" cy="115" rx="22" ry="3" fill="#fadfa0" opacity="0.7"/>
+      <ellipse cx="540" cy="118" rx="22" ry="9" fill="url(#goldCord)"/>
+      <ellipse cx="540" cy="115" rx="22" ry="3" fill="#fadfa0" opacity="0.7"/>
+      <ellipse cx="810" cy="118" rx="22" ry="9" fill="url(#goldCord)"/>
+      <ellipse cx="810" cy="115" rx="22" ry="3" fill="#fadfa0" opacity="0.7"/>
+    </g>
+
+    <!-- 5. tassels hanging from each cusp pinch -->
+    <use href="#tassel" x="270" y="120"/>
+    <use href="#tassel" x="540" y="120"/>
+    <use href="#tassel" x="810" y="120"/>
+  </g>
 
   <!-- stage spotlight glow on curtain behind crown -->
   <rect width="1080" height="1920" fill="url(#crownHalo)"/>
@@ -131,12 +359,34 @@
   <g id="content" opacity="1">
     <!-- logo crown — scale 1.15 (~252px tall crown), centered at (540, 900) -->
     <g transform="translate(246 633) scale(1.15)">
+      <!-- 1. drop shadow under the crown silhouette (lifts it off the curtain) -->
+      <g transform="translate(3 10)" filter="url(#crownDropShadow)" opacity="0.55">
+        <path d="M143 235 L143 168 L194 204 L256 122 L318 204 L369 168 L369 235 Z" fill="#000000"/>
+        <rect x="143" y="240" width="226" height="30" rx="15" fill="#000000"/>
+        <rect x="164" y="282" width="184" height="26" rx="13" fill="#000000"/>
+        <rect x="184" y="318" width="144" height="23" rx="11.5" fill="#000000"/>
+      </g>
+
+      <!-- 2. warm rim light: thick gold stroke on the crown silhouette, blurred
+           so the edge picks up a soft warm halo. Behind the actual crown body. -->
+      <g filter="url(#crownRimGlow)" opacity="0.7">
+        <path d="M143 235 L143 168 L194 204 L256 122 L318 204 L369 168 L369 235 Z"
+              fill="none" stroke="#f2cc7a" stroke-width="6" stroke-linejoin="round"/>
+        <rect x="143" y="240" width="226" height="30" rx="15"
+              fill="none" stroke="#f2cc7a" stroke-width="5"/>
+      </g>
+
+      <!-- 3. crown body + gloss + bars + jewel glows + jewels + highlights -->
       <path d="M143 235 L143 168 L194 204 L256 122 L318 204 L369 168 L369 235 Z" fill="url(#crown)" stroke="#fadfe4" stroke-width="5" stroke-linejoin="round"/>
       <path d="M143 235 L143 168 L194 204 L256 122 L318 204 L369 168 L369 235 Z" fill="url(#crownGloss)" stroke="none"/>
       <rect x="143" y="240" width="226" height="30" rx="15" fill="url(#pinkBar)"/>
       <rect x="147" y="242" width="218" height="13" rx="6.5" fill="url(#pinkGloss)"/>
       <rect x="164" y="282" width="184" height="26" rx="13" fill="#9a7a80" opacity="0.92"/>
       <rect x="184" y="318" width="144" height="23" rx="11.5" fill="#7a5a60" opacity="0.78"/>
+      <!-- jewel glow halos (sit behind each gold dot for a lit-gem effect) -->
+      <circle cx="256" cy="122" r="52" fill="url(#jewelGlow)"/>
+      <circle cx="143" cy="168" r="52" fill="url(#jewelGlow)"/>
+      <circle cx="369" cy="168" r="52" fill="url(#jewelGlow)"/>
       <circle cx="256" cy="122" r="18" fill="url(#goldDot)"/>
       <circle cx="143" cy="168" r="18" fill="url(#goldDot)"/>
       <circle cx="369" cy="168" r="18" fill="url(#goldDot)"/>
@@ -145,8 +395,11 @@
       <ellipse cx="362" cy="161" rx="6.5" ry="4" fill="#ffffff" opacity="0.7"/>
     </g>
 
-    <!-- wordmark -->
-    <text x="540" y="1210" font-family="'Playfair Display', Georgia, serif" font-size="120" font-weight="700" text-anchor="middle" letter-spacing="-2" fill="url(#gold)">STYLEDESK.AI</text>
+    <!-- wordmark — drop shadow first so it sits behind the gold text -->
+    <g transform="translate(3 10)" filter="url(#crownDropShadow)" opacity="0.55">
+      <text x="540" y="1210" font-family="'Playfair Display', Georgia, serif" font-size="96" font-weight="700" text-anchor="middle" letter-spacing="-2" fill="#000000">STYLEDESK.AI</text>
+    </g>
+    <text x="540" y="1210" font-family="'Playfair Display', Georgia, serif" font-size="96" font-weight="700" text-anchor="middle" letter-spacing="-2" fill="url(#gold)">STYLEDESK.AI</text>
 
     <!-- refined divider -->
     <line x1="380" y1="1320" x2="525" y2="1320" stroke="#c9a064" stroke-opacity="0.40" stroke-width="0.8"/>

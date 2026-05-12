@@ -1,56 +1,92 @@
-// Renders the StyleDesk outro card as a closing-curtain animation.
+// Renders the StyleDesk outro card as a Muppet-Show-style curtain close.
 //
 // Usage:
-//   node render-animation.js               # generates GIF preview (540×960, 30fps, ~2.5s)
-//   node render-animation.js --mp4         # also generates MP4 at 1080×1920 for Descript
+//   node render-animation.js               # 1080×1920 H.264 MP4 for Descript
+//   node render-animation.js --alpha       # 1080×1920 VP9 WebM with alpha,
+//                                          # for layering as an overlay over
+//                                          # dashboard footage in Descript
 //
-// Pipeline: parameterize the outro SVG (panel translates + content opacity),
-// render N frames via sharp, then ffmpeg into GIF / MP4.
+// Pipeline: parameterize the outro SVG (clipPath inner edge + content opacity),
+// render N frames via sharp, then ffmpeg into MP4 (or WebM in alpha mode).
+// Each curtain panel slides in horizontally from its outer edge toward the
+// center stage line (x=540) with a straight vertical leading edge — the pleat
+// geometry sells the cloth, no wavy hem needed (a wavy hem zigzags as the two
+// panels meet). The right panel starts RIGHT_DELAY seconds after the left for
+// an organic, non-synchronized feel.
+//
+// Alpha mode strips the elements that depend on an opaque backstage (velvet
+// base rect, top + bottom shadow gradients, crown halo) so the un-curtained
+// region renders transparent; the dashboard underneath shows through and gets
+// progressively covered as the curtains slide in.
 
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 const sharp = require('/tmp/node_modules/sharp');
 
-const FPS = 30;
-const ANIM_DUR = 1.5;          // curtains closing — 1.5s
-const FADE_DUR = 0.5;          // content fade in — 0.5s
-const HOLD_DUR = 0.6;          // final hold
-const TOTAL_FRAMES = Math.round((ANIM_DUR + FADE_DUR + HOLD_DUR) * FPS);
+const wantAlpha = process.argv.includes('--alpha');
 
-const PREVIEW_W = 540;         // GIF preview width (half-res for size)
-const PREVIEW_H = 960;
+const FPS = 30;
+const ANIM_DUR = 1.6;            // curtains closing — 1.6s per panel
+const RIGHT_DELAY = 0.08;        // right panel starts 80ms after left
+const FADE_DUR = 0.25;           // content fade in (snappy)
+const HOLD_DUR = 1.5;            // final hold — give viewers time to read
+const TOTAL_FRAMES = Math.round((ANIM_DUR + RIGHT_DELAY + FADE_DUR + HOLD_DUR) * FPS);
+
+// Full Reels resolution.
 const FULL_W = 1080;
 const FULL_H = 1920;
 
 const OUT_DIR = path.join(__dirname, 'png-ready', '_frames');
-const GIF_OUT = path.join(__dirname, 'png-ready', 'outro-card-reels.gif');
 const MP4_OUT = path.join(__dirname, 'png-ready', 'outro-card-reels.mp4');
+const WEBM_OUT = path.join(__dirname, 'png-ready', 'outro-card-reels.webm');
 const SVG_PATH = path.join(__dirname, 'outro-card-reels.svg');
 
-// cubic ease-out: t' = 1 - (1-t)^3
-const easeOut = t => 1 - Math.pow(1 - t, 3);
+// Quadratic-ish ease-out: starts moving immediately, settles into place at the
+// end. Reads as a stagehand pulling the curtain in, then easing it shut.
+const easeOut = t => 1 - Math.pow(1 - t, 2.4);
 
-function svgForFrame(t /* seconds */) {
-  // Panel translates: linear ease-out from off-screen to 0 over ANIM_DUR.
-  let p = Math.min(t / ANIM_DUR, 1);
-  let eased = easeOut(p);
-  let leftTx = -540 * (1 - eased);  // -540 → 0
-  let rightTx = 540 * (1 - eased);  // +540 → 0
+function clipPathD(t, panel) {
+  // Closing motion: each panel slides in from its outer edge toward the
+  // centerline at x=540. Left panel grows from x=0 (zero width) to x=0..540.
+  // Right panel grows from x=1080 (zero width) to x=540..1080. Inner edge is
+  // a straight vertical line — pleats give the cloth read.
+  const ts = panel === 'right' ? Math.max(0, t - RIGHT_DELAY) : t;
+  const p = Math.max(0, Math.min(ts / ANIM_DUR, 1));
+  const eased = easeOut(p);
 
-  // Content opacity: starts at 0, fades in 0→1 between ANIM_DUR and ANIM_DUR+FADE_DUR.
+  const innerX = panel === 'right' ? 1080 - 540 * eased : 540 * eased;
+  const outerX = panel === 'right' ? 1080 : 0;
+
+  return `M ${outerX} 0 L ${innerX.toFixed(2)} 0 ` +
+         `L ${innerX.toFixed(2)} 1920 L ${outerX} 1920 Z`;
+}
+
+function svgForFrame(t) {
+  // Content fades in once both panels have landed.
+  const animEnd = ANIM_DUR + RIGHT_DELAY;
   let opacity = 0;
-  if (t >= ANIM_DUR) {
-    opacity = Math.min((t - ANIM_DUR) / FADE_DUR, 1);
+  if (t >= animEnd) {
+    opacity = Math.min((t - animEnd) / FADE_DUR, 1);
   }
 
   let svg = fs.readFileSync(SVG_PATH, 'utf8');
-  svg = svg.replace('<g id="leftCurtain" transform="translate(0 0)">',
-                    `<g id="leftCurtain" transform="translate(${leftTx} 0)">`);
-  svg = svg.replace('<g id="rightCurtain" transform="translate(0 0)">',
-                    `<g id="rightCurtain" transform="translate(${rightTx} 0)">`);
+  svg = svg.replace(/<path id="leftClipPath" d="[^"]*"\/>/,
+                    `<path id="leftClipPath" d="${clipPathD(t, 'left')}"/>`);
+  svg = svg.replace(/<path id="rightClipPath" d="[^"]*"\/>/,
+                    `<path id="rightClipPath" d="${clipPathD(t, 'right')}"/>`);
   svg = svg.replace('<g id="content" opacity="1">',
                     `<g id="content" opacity="${opacity.toFixed(3)}">`);
+
+  if (wantAlpha) {
+    // Strip elements that depend on an opaque backstage so the un-curtained
+    // region is transparent (dashboard footage shows through underneath).
+    svg = svg.replace(/<rect width="1080" height="1920" fill="url\(#velvetBase\)"\/>/, '');
+    svg = svg.replace(/<rect width="1080" height="320" fill="url\(#topShadow\)"\/>/, '');
+    svg = svg.replace(/<rect x="0" y="1600" width="1080" height="320" fill="url\(#bottomShadow\)"\/>/, '');
+    svg = svg.replace(/<rect width="1080" height="1920" fill="url\(#crownHalo\)"\/>/, '');
+  }
+
   return svg;
 }
 
@@ -65,42 +101,33 @@ async function renderFrame(i, width, height) {
 }
 
 async function main() {
-  const wantMp4 = process.argv.includes('--mp4');
-
-  // Clean + recreate frames dir
   if (fs.existsSync(OUT_DIR)) {
     for (const f of fs.readdirSync(OUT_DIR)) fs.unlinkSync(path.join(OUT_DIR, f));
   } else {
     fs.mkdirSync(OUT_DIR, { recursive: true });
   }
 
-  // Render all frames at preview size for GIF
-  console.log(`Rendering ${TOTAL_FRAMES} frames at ${PREVIEW_W}×${PREVIEW_H}…`);
+  console.log(`Rendering ${TOTAL_FRAMES} frames at ${FULL_W}×${FULL_H}…`);
   for (let i = 0; i < TOTAL_FRAMES; i++) {
-    await renderFrame(i, PREVIEW_W, PREVIEW_H);
+    await renderFrame(i, FULL_W, FULL_H);
     if (i % 10 === 0) process.stdout.write(`  ${i}/${TOTAL_FRAMES}\r`);
   }
   console.log(`  ${TOTAL_FRAMES}/${TOTAL_FRAMES} done.`);
 
-  // Build GIF via ffmpeg (with palette for size + quality)
-  const palette = path.join(OUT_DIR, '_palette.png');
-  console.log('Building palette…');
-  execSync(`ffmpeg -y -framerate ${FPS} -i ${OUT_DIR}/f%04d.png ` +
-           `-vf "palettegen=stats_mode=diff" ${palette}`, { stdio: 'inherit' });
-  console.log('Encoding GIF…');
-  execSync(`ffmpeg -y -framerate ${FPS} -i ${OUT_DIR}/f%04d.png -i ${palette} ` +
-           `-lavfi "paletteuse=dither=bayer:bayer_scale=4" ${GIF_OUT}`,
-           { stdio: 'inherit' });
-  console.log(`GIF: ${GIF_OUT}`);
-
-  if (wantMp4) {
-    // Re-render at full resolution for MP4
-    console.log(`Rendering ${TOTAL_FRAMES} frames at ${FULL_W}×${FULL_H} for MP4…`);
-    for (let i = 0; i < TOTAL_FRAMES; i++) {
-      await renderFrame(i, FULL_W, FULL_H);
-      if (i % 10 === 0) process.stdout.write(`  ${i}/${TOTAL_FRAMES}\r`);
-    }
-    console.log(`  ${TOTAL_FRAMES}/${TOTAL_FRAMES} done.`);
+  if (wantAlpha) {
+    // VP9 + alpha. WebM stores alpha as a sidecar VP9 stream signaled by the
+    // Matroska ALPHA_MODE=1 tag — without that metadata flag, decoders won't
+    // know to composite the alpha channel even though it's encoded. -auto-alt-ref 0
+    // is required for alpha encoding. CRF 28 keeps the file small (~MB-range).
+    console.log('Encoding WebM (VP9 + alpha, yuva420p)…');
+    execSync(`ffmpeg -y -framerate ${FPS} -i ${OUT_DIR}/f%04d.png ` +
+             `-c:v libvpx-vp9 -pix_fmt yuva420p ` +
+             `-metadata:s:v:0 alpha_mode=1 ` +
+             `-auto-alt-ref 0 -lag-in-frames 0 ` +
+             `-b:v 0 -crf 28 -row-mt 1 ${WEBM_OUT}`,
+             { stdio: 'inherit' });
+    console.log(`WebM (alpha): ${WEBM_OUT}`);
+  } else {
     console.log('Encoding MP4 (H.264, yuv420p, faststart)…');
     execSync(`ffmpeg -y -framerate ${FPS} -i ${OUT_DIR}/f%04d.png ` +
              `-c:v libx264 -pix_fmt yuv420p -movflags +faststart -crf 18 ${MP4_OUT}`,
