@@ -1,4 +1,5 @@
 {
+  "cleanUrls": true,
   "rewrites": [
     { "source": "/go/:token", "destination": "https://api.styledesk.ai/go/:token" }
   ],
